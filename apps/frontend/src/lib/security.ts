@@ -99,13 +99,16 @@ export function verifyToken(token: string): any | null {
 export function checkCsrf(origin: string | null, referer: string | null): boolean {
   if (!origin && !referer) return true; // API client bypass
   
-  const allowedHost = 'localhost:3000';
-  const allowedDomain = 'vidhyabookstore.com';
+  const allowedHosts = ['localhost:3000', 'localhost:3001'];
+  const allowedDomains = ['vidhyabookstore.com', 'vercel.app'];
 
   const checkURL = (urlStr: string) => {
     try {
       const url = new URL(urlStr);
-      return url.host === allowedHost || url.host.endsWith(allowedDomain);
+      return (
+        allowedHosts.includes(url.host) ||
+        allowedDomains.some(domain => url.host === domain || url.host.endsWith(`.${domain}`))
+      );
     } catch {
       return false;
     }
