@@ -107,29 +107,9 @@ export default function StudentHub() {
       <button
         onClick={() => setIsOpen(true)}
         aria-label="Open Student Hub Dashboard"
-        style={{
-          position: 'fixed',
-          bottom: '100px',
-          right: '24px',
-          zIndex: 9999,
-          backgroundColor: '#213D8F',
-          color: '#ffffff',
-          border: 'none',
-          borderRadius: '9999px',
-          padding: '12px 20px',
-          fontSize: '0.85rem',
-          fontWeight: 700,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          cursor: 'pointer',
-          boxShadow: '0 8px 30px rgba(33, 61, 143, 0.4)',
-          borderTop: '1px solid rgba(255,255,255,0.2)',
-          transition: 'transform 0.2s ease'
-        }}
-        onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        className="student-hub-fab"
       >
+
         <GraduationCap size={18} />
         <span>Student Hub 📚</span>
       </button>
