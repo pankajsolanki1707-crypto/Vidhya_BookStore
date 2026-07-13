@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getProductById, updateProduct, deleteProduct } from '@/lib/database';
 import { verifyToken, sanitizeInput, validateImageUrl } from '@/lib/security';
 
+export const dynamic = 'force-dynamic';
+
+
 function isAdminAuthorized(req: NextRequest): boolean {
   const authHeader = req.headers.get('Authorization') || req.headers.get('x-admin-password');
   if (!authHeader) return false;
