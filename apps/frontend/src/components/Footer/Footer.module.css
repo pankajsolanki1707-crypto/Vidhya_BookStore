@@ -1,85 +1,119 @@
 .footer {
-  background-color: var(--color-bg-light);
-  border-top: 1px solid var(--color-border);
-  color: var(--color-text-main);
+  background-color: #0f172a;
+  color: #e2e8f0;
   display: flex;
   flex-direction: column;
 }
 
-/* Trust Banner styling */
+/* ============================================================
+   TRUST BANNER
+============================================================ */
 .trustBanner {
-  background-color: var(--color-primary-light);
-  padding: 30px 0;
-  border-bottom: 1px solid rgba(33, 61, 143, 0.08);
+  background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
+  padding: 40px 0;
+  border-bottom: 1px solid rgba(33, 61, 143, 0.1);
 }
 
-.trustGrid {
+.trustBannerGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
 
-.trustItem {
+.trustBannerItem {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
+  padding: 18px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 14px;
+  border: 1px solid rgba(33, 61, 143, 0.08);
+  box-shadow: 0 2px 8px rgba(33, 61, 143, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.trustIcon {
-  color: var(--color-primary);
+.trustBannerItem:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -4px rgba(33, 61, 143, 0.12);
+}
+
+.trustBannerIconWrap {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #213D8F 0%, #172a5e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
   flex-shrink: 0;
 }
 
-.trustTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-primary);
+.trustBannerBody h4 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #213D8F;
+  line-height: 1.3;
 }
 
-.trustText {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
+.trustBannerBody p {
+  font-size: 0.73rem;
+  color: #64748b;
+  margin-top: 2px;
 }
 
-/* Footer Main styling */
+/* ============================================================
+   MAIN FOOTER
+============================================================ */
 .footerMain {
   background-color: #0f172a;
-  color: #e2e8f0;
-  padding: 60px 0;
+  padding: 72px 0 48px;
 }
 
 .footerGrid {
   display: grid;
-  grid-template-columns: 2fr 1fr 2fr;
-  gap: 60px;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 48px;
 }
 
 .footerCol {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
+/* Brand Column */
 .logo {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--color-secondary);
+  gap: 10px;
+  margin-bottom: 4px;
 }
 
-.logoIcon {
-  color: var(--color-accent-yellow);
-}
+.logoIcon { color: #FCD116; }
 
 .logoText {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.1rem;
+  font-weight: 800;
   letter-spacing: 0.5px;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.2;
+}
+
+.logoSubtext {
+  font-size: 0.68rem;
+  color: #64748b;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-top: 1px;
 }
 
 .storeIntro {
-  font-size: 0.9rem;
-  line-height: 1.6;
+  font-size: 0.87rem;
+  line-height: 1.7;
   color: #94a3b8;
 }
 
@@ -87,76 +121,211 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.85rem;
-  color: var(--color-accent-yellow);
-  font-weight: 500;
-}
-
-.colTitle {
-  font-size: 1.1rem;
+  font-size: 0.82rem;
+  color: #FCD116;
   font-weight: 600;
-  color: var(--color-secondary);
-  border-bottom: 2px solid var(--color-primary-medium);
-  padding-bottom: 10px;
-  margin-bottom: 10px;
+  background: rgba(252, 209, 22, 0.08);
+  padding: 8px 14px;
+  border-radius: 9999px;
+  border: 1px solid rgba(252, 209, 22, 0.15);
+  width: fit-content;
 }
 
+/* Social Links */
+.socialRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.socialBtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.socialBtn:hover {
+  background: rgba(252, 209, 22, 0.12);
+  border-color: rgba(252, 209, 22, 0.3);
+  color: #FCD116;
+  transform: translateY(-2px);
+}
+
+/* Column Headers */
+.colTitle {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 4px;
+}
+
+/* Link Lists */
 .linkList {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .footerLink {
-  font-size: 0.9rem;
+  font-size: 0.87rem;
   color: #94a3b8;
-  transition: var(--transition-fast);
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .footerLink:hover {
-  color: var(--color-accent-yellow);
+  color: #FCD116;
   transform: translateX(4px);
 }
 
+/* Contact Info */
 .contactInfo {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .contactRow {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  font-size: 0.9rem;
+  gap: 10px;
+  font-size: 0.87rem;
   line-height: 1.5;
   color: #94a3b8;
 }
 
 .contactIcon {
-  color: var(--color-accent-yellow);
+  color: #FCD116;
   flex-shrink: 0;
   margin-top: 2px;
 }
 
 .callLink {
-  color: var(--color-secondary);
-  font-weight: 500;
+  color: white;
+  font-weight: 600;
+  transition: all 0.15s;
 }
 
 .callLink:hover {
-  color: var(--color-accent-yellow);
+  color: #FCD116;
   text-decoration: underline;
 }
 
-/* Footer Bottom styling */
+/* Action Buttons */
+.contactActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.contactBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.contactBtnWhatsapp {
+  background: #25d366;
+  color: white;
+}
+
+.contactBtnWhatsapp:hover {
+  background: #1fb855;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.contactBtnCall {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.contactBtnCall:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #FCD116;
+}
+
+/* ============================================================
+   PAYMENT & NEWSLETTER DIVIDER
+============================================================ */
+.footerDivider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin: 0;
+}
+
+.footerMid {
+  background-color: #0b1224;
+  padding: 28px 0;
+}
+
+.footerMidRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.paymentLabel {
+  font-size: 0.8rem;
+  color: #475569;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.paymentIcons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.paymentBadge {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   FOOTER BOTTOM
+============================================================ */
 .footerBottom {
   background-color: #020617;
-  color: #64748b;
-  font-size: 0.8rem;
-  padding: 24px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: #475569;
+  font-size: 0.78rem;
+  padding: 20px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .bottomContent {
@@ -164,30 +333,47 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
 }
 
 .indoreBadge {
-  color: #94a3b8;
+  color: #64748b;
   font-weight: 500;
 }
 
-/* Responsive grid adjustments */
-@media (max-width: 900px) {
-  .trustGrid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  .footerGrid {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
+.bottomLinks {
+  display: flex;
+  gap: 16px;
 }
 
-@media (max-width: 600px) {
-  .bottomContent {
-    flex-direction: column;
-    text-align: center;
-  }
+.bottomLink {
+  color: #475569;
+  font-size: 0.75rem;
+  transition: all 0.15s;
+}
+
+.bottomLink:hover { color: #94a3b8; }
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 1100px) {
+  .trustBannerGrid { grid-template-columns: repeat(2, 1fr); }
+  .footerGrid { grid-template-columns: 1.5fr 1fr 1fr; gap: 40px; }
+  .footerGrid > *:last-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 768px) {
+  .trustBannerGrid { grid-template-columns: 1fr 1fr; }
+  .footerGrid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .footerGrid > *:first-child { grid-column: 1 / -1; }
+  .footerMidRow { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 540px) {
+  .trustBannerGrid { grid-template-columns: 1fr; }
+  .footerGrid { grid-template-columns: 1fr; }
+  .footerGrid > *:last-child { grid-column: auto; }
+  .bottomContent { flex-direction: column; text-align: center; }
+  .bottomLinks { justify-content: center; }
 }
