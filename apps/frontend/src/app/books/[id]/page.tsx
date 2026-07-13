@@ -13,12 +13,40 @@ import SpecsCompare from '@/components/SpecsCompare/SpecsCompare';
 import PreviewModal from './PreviewModal';
 import { getProductById, getProducts } from '@/lib/database';
 import { ChevronRight, Star, MapPin, ShieldCheck, RefreshCw, Send, Truck, HelpCircle, CheckCircle } from 'lucide-react';
-import { ImageZoom, UrgencyNotifier, SpecsTabs, StickyPurchaseBar } from '@/components/ProductDetailClientActions';
+import { ImageZoom, UrgencyNotifier, SpecsTabs, StickyPurchaseBar, ExpressBuyButton, RestockNotifierForm } from '@/components/ProductDetailClientActions';
+import type { Metadata } from 'next';
 import styles from './details.module.css';
+
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const product = getProductById(id);
+  if (!product) return {};
+
+  return {
+    title: `${product.title} by ${product.author} | Vidhya Book Store Indore`,
+    description: `Buy ${product.title} by ${product.author} online. ${product.description.slice(0, 150)}... Sourced directly from Indore Payal Plaza storefront.`,
+    alternates: {
+      canonical: `https://vidhyabookstore.com/books/${product.id}`,
+    },
+    openGraph: {
+      title: `${product.title} | Vidhya Book Store Indore`,
+      description: product.description.slice(0, 150),
+      images: [{ url: product.image }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: product.title,
+      description: product.description.slice(0, 150),
+      images: [product.image],
+    }
+  };
+}
+
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const { id } = await params;
@@ -207,8 +235,16 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
               {/* Add to Cart Actions */}
               <div className={styles.purchaseActions}>
-                <AddToCartButton product={product} />
+                {product.inStock ? (
+                  <>
+                    <AddToCartButton product={product} />
+                    <ExpressBuyButton product={product} />
+                  </>
+                ) : (
+                  <RestockNotifierForm product={product} />
+                )}
               </div>
+
 
               {/* Delivery info card */}
               <div className={styles.deliveryNoteCard}>

@@ -6,13 +6,14 @@ import Footer from '@/components/Footer/Footer';
 import { useCart } from '@/context/CartContext';
 import { 
   User, Package, MapPin, LifeBuoy, Compass, MapPinned, 
-  CheckCircle2, ChevronRight, Wallet, Gift, Bell, Share2, Printer, RefreshCcw 
+  CheckCircle2, ChevronRight, Wallet, Gift, Bell, Share2, Printer, RefreshCcw, BookOpen
 } from 'lucide-react';
+
 import styles from '../user.module.css';
 
 export default function AccountPage() {
   const { addToCart } = useCart();
-  const [activeTab, setActiveTab] = useState<'profile' | 'orders' | 'track' | 'addresses' | 'support' | 'wallet' | 'promotions'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'orders' | 'track' | 'addresses' | 'support' | 'wallet' | 'promotions' | 'bookmarks'>('profile');
   const [userEmail, setUserEmail] = useState('student@vidhya.com');
   const [userName, setUserName] = useState('Aditya Sharma');
   const [userPhone, setUserPhone] = useState('9876543210');
@@ -248,12 +249,20 @@ export default function AccountPage() {
                   <span>Alerts & Referral</span>
                 </button>
                 <button
+                  onClick={() => setActiveTab('bookmarks')}
+                  className={activeTab === 'bookmarks' ? styles.activeMenuItem : styles.menuItem}
+                >
+                  <BookOpen size={16} />
+                  <span>Bookmarks & Wishlist</span>
+                </button>
+                <button
                   onClick={() => setActiveTab('addresses')}
                   className={activeTab === 'addresses' ? styles.activeMenuItem : styles.menuItem}
                 >
                   <MapPin size={16} />
                   <span>Saved Addresses</span>
                 </button>
+
                 <button
                   onClick={() => setActiveTab('support')}
                   className={activeTab === 'support' ? styles.activeMenuItem : styles.menuItem}
@@ -487,6 +496,97 @@ export default function AccountPage() {
                   </div>
                 </div>
               )}
+
+              {/* Bookmarks, Wishlist & Student Membership Tab */}
+              {activeTab === 'bookmarks' && (
+                <div>
+                  <h3>Bookmarks & Student Membership</h3>
+
+                  {/* Student Membership application card */}
+                  <div style={{ padding: '24px', border: '1px solid var(--color-border)', borderRadius: '12px', backgroundColor: 'var(--color-bg-light)', marginBottom: '30px' }}>
+                    <h4 style={{ color: 'var(--color-primary)', fontWeight: 800, margin: '0 0 8px 0' }}>🎓 Indore Student Club Membership</h4>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', lineHeight: 1.5, margin: '0 0 16px 0' }}>
+                      Apply with your Indore coaching library card or hostel receipt to get a **flat 12% discount** on all competitive guides, mock tests, and stationery packs!
+                    </p>
+
+                    <form 
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        alert('✓ Student ID uploaded successfully!\nOur Bhanwarkuan store coordinator will verify your ID card within 24 hours to unlock your 12% club discount.');
+                        const btn = document.getElementById('membership-btn');
+                        if (btn) btn.innerText = 'Application Under Review ⏳';
+                      }}
+                      style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
+                    >
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        <div>
+                          <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-muted)', display: 'block', marginBottom: '6px' }}>Coaching Center Name *</label>
+                          <input type="text" placeholder="e.g. Kautilya Academy" required style={{ width: '100%', border: '1px solid var(--color-border)', padding: '8px 12px', borderRadius: '4px', fontSize: '0.8rem' }} />
+                        </div>
+                        <div>
+                          <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-muted)', display: 'block', marginBottom: '6px' }}>Student Roll No / Batch Code *</label>
+                          <input type="text" placeholder="e.g. BATCH-A-MPPSC" required style={{ width: '100%', border: '1px solid var(--color-border)', padding: '8px 12px', borderRadius: '4px', fontSize: '0.8rem' }} />
+                        </div>
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-muted)', display: 'block', marginBottom: '6px' }}>Upload Coaching ID Card Photo *</label>
+                        <input type="file" accept="image/*" required style={{ fontSize: '0.8rem' }} />
+                      </div>
+                      <button id="membership-btn" type="submit" className="btn-accent" style={{ padding: '10px 20px', width: 'fit-content', fontSize: '0.8rem', border: 'none', cursor: 'pointer' }}>
+                        Submit Membership Application
+                      </button>
+                    </form>
+                  </div>
+
+                  {/* Reading Wishlist & Bookmarks list */}
+                  <h4 style={{ color: 'var(--color-primary)', fontWeight: 800, marginBottom: '14px' }}>Saved Study Guides & Bookmarks</h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {[
+                      { id: 'mppsc-polity-notes', title: 'MPPSC Governance & Polity Topic-wise Solved mock guides', price: 420, author: 'Kautilya Experts' },
+                      { id: 'mppsc-geography-map', title: 'Madhya Pradesh District-wise Mapping Chart Sheets Bundle', price: 150, author: 'VBS Publications' }
+                    ].map((item, idx) => (
+                      <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', border: '1px solid var(--color-border)', borderRadius: '8px', backgroundColor: '#ffffff' }}>
+                        <div>
+                          <strong style={{ fontSize: '0.85rem', color: 'var(--color-primary)' }}>{item.title}</strong>
+                          <div style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', marginTop: '4px' }}>
+                            By {item.author} | Sourced price: <strong>₹{item.price}</strong>
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <button
+                            onClick={() => {
+                              addToCart({
+                                id: item.id,
+                                title: item.title,
+                                author: item.author,
+                                price: item.price,
+                                image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=100&auto=format&fit=crop&q=60',
+                                category: 'Competitive Exams',
+                                inStock: true,
+                                stockCount: 10,
+                                format: 'Paperback'
+                              } as any);
+                              alert('Bookmark added to shopping cart! 🛒');
+                            }}
+                            className="btn-primary"
+                            style={{ padding: '6px 12px', fontSize: '0.72rem' }}
+                          >
+                            Add to Cart
+                          </button>
+                          <button 
+                            onClick={() => alert('Bookmark removed successfully!')} 
+                            style={{ border: 'none', background: 'transparent', color: 'var(--color-error)', textDecoration: 'underline', cursor: 'pointer', fontSize: '0.75rem' }}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                </div>
+              )}
+
 
               {/* Addresses Tab */}
               {activeTab === 'addresses' && (

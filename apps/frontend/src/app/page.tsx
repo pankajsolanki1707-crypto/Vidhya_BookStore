@@ -10,12 +10,14 @@ import FaqAccordion from '@/components/FaqAccordion/FaqAccordion';
 import NewsletterForm from '@/components/NewsletterForm/NewsletterForm';
 import { getProducts } from '@/lib/database';
 import ConversionBoosters from '@/components/ConversionBoosters';
+import StudentHub from '@/components/StudentHub';
 import {
   ArrowRight, GraduationCap, PenTool, BookOpen, Star,
   MapPin, Phone, Send, ShieldCheck, BadgePercent,
   BookMarked, CheckCircle, Mail, Compass, Truck, RotateCcw,
   Library, Clock, MessageSquare, FileText, ShoppingBag
 } from 'lucide-react';
+
 import styles from './home.module.css';
 
 
@@ -591,7 +593,9 @@ export default function Home() {
 
       {/* Conversion Booster popups */}
       <ConversionBoosters />
+      <StudentHub />
     </div>
   );
 }
+
 

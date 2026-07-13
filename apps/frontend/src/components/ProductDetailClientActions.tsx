@@ -286,3 +286,136 @@ export function StickyPurchaseBar({ product }: { product: Product }) {
     </div>
   );
 }
+
+// --------------------------------------------------
+// 5. EXPRESS CHECKOUT BUTTON
+// --------------------------------------------------
+export function ExpressBuyButton({ product }: { product: Product }) {
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('vbs_user_token');
+    if (token) {
+      setIsUserLoggedIn(true);
+    }
+  }, []);
+
+  const handleExpressBuy = async () => {
+    setLoading(true);
+    // Simulate placing order instantly
+    setTimeout(() => {
+      setLoading(false);
+      alert(`⚡ Express Order Placed Successfully!\n\nProduct: "${product.title}"\nPayment Method: Pay on Delivery (COD)\nDelivery Address: Default Registered Student Hostel Address\n\nThank you for choosing Vidhya Express Checkout! ✓`);
+      window.location.href = `/account`;
+    }, 1500);
+  };
+
+  if (!isUserLoggedIn) {
+    return (
+      <div style={{ fontSize: '0.78rem', color: 'var(--color-text-light)', marginTop: '8px', fontStyle: 'italic' }}>
+        🔑 <Link href="/auth" style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontWeight: 600 }}>Login</Link> to unlock 1-Click Express Checkout!
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={handleExpressBuy}
+      disabled={loading}
+      style={{
+        backgroundColor: '#b45309',
+        color: '#ffffff',
+        border: 'none',
+        borderRadius: 'var(--radius-sm)',
+        padding: '12px 20px',
+        fontSize: '0.85rem',
+        fontWeight: 700,
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '6px',
+        width: '100%',
+        boxShadow: 'var(--shadow-sm)',
+        marginTop: '10px',
+        transition: 'background-color 0.2s'
+      }}
+      onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#92400e'}
+      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#b45309'}
+    >
+      {loading ? 'Processing...' : '⚡ 1-Click Express Purchase'}
+    </button>
+  );
+}
+
+// --------------------------------------------------
+// 6. BACK IN STOCK NOTIFIER
+// --------------------------------------------------
+export function RestockNotifierForm({ product }: { product: Product }) {
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setSubmitted(true);
+    alert(`✓ Restock Notification Registered!\nWe will notify you at ${email} as soon as "${product.title}" is back in stock at Payal Plaza.`);
+  };
+
+  return (
+    <div style={{
+      border: '1.5px dashed var(--color-border)',
+      padding: '16px',
+      borderRadius: '8px',
+      backgroundColor: 'var(--color-bg-light)',
+      marginTop: '10px'
+    }}>
+      <h4 style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--color-error)', margin: '0 0 6px 0' }}>
+        🚫 Out of Stock
+      </h4>
+      <p style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)', margin: '0 0 10px 0', lineHeight: 1.4 }}>
+        This guidebook is currently out of stock. Leave your email below to receive an instant alert when it arrives.
+      </p>
+      {!submitted ? (
+        <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '6px' }}>
+          <input 
+            type="email" 
+            placeholder="student@gmail.com" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            style={{
+              flex: 1,
+              border: '1px solid var(--color-border)',
+              borderRadius: '4px',
+              padding: '6px 10px',
+              fontSize: '0.8rem',
+              backgroundColor: '#ffffff'
+            }}
+          />
+          <button 
+            type="submit"
+            style={{
+              backgroundColor: 'var(--color-primary)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              padding: '6px 14px',
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
+          >
+            Notify Me
+          </button>
+        </form>
+      ) : (
+        <div style={{ fontSize: '0.78rem', color: '#047857', fontWeight: 700 }}>
+          ✓ Restock alert active for: {email}
+        </div>
+      )}
+    </div>
+  );
+}
+

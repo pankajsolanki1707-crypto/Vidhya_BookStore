@@ -330,3 +330,14 @@ img {
   box-shadow: 0 12px 32px -4px rgba(252, 209, 22, 0.5);
   filter: brightness(1.05);
 }
+
+/* Accessibility: WCAG AA Keyboard Focus outline ring indicators */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--color-primary-medium) !important;
+  outline-offset: 2px !important;
+}
+
