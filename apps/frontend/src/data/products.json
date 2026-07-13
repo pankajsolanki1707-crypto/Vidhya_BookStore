@@ -481,5 +481,28 @@
     "featured": true,
     "isBestseller": true,
     "isNewArrival": false
+  },
+  {
+    "id": "novels-48-laws-of-power",
+    "title": "The 48 Laws of Power",
+    "author": "Robert Greene",
+    "publisher": "Profile Books",
+    "price": 499,
+    "originalPrice": 699,
+    "category": "Novels & Literature",
+    "subcategory": "Self-Help & Philosophy",
+    "format": "Paperback",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600",
+    "description": "Amoral, cunning, ruthless, and instructive Distills 3,000 years of the history of power into 48 well-explicated laws. Synthesizes the philosophies of Machiavelli, Sun-tzu, and Clausewitz.",
+    "rating": 4.8,
+    "reviewCount": 1850,
+    "inStock": true,
+    "stockCount": 45,
+    "isbn": "978-1-86197-278-1",
+    "pages": 452,
+    "publishYear": 2007,
+    "featured": true,
+    "isBestseller": true,
+    "isNewArrival": true
   }
 ]
