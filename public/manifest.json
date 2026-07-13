@@ -1,0 +1,24 @@
+{
+  "name": "Vidhya Book Store & Stationery",
+  "short_name": "Vidhya Books",
+  "description": "Premium Bookstore and Stationery in Bhanwarkuan, Indore. Get exam preparation materials, academic books, novels, and stationary.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#213D8F",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}

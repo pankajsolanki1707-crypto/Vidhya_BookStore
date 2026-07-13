@@ -1,0 +1,193 @@
+.footer {
+  background-color: var(--color-bg-light);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-main);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Trust Banner styling */
+.trustBanner {
+  background-color: var(--color-primary-light);
+  padding: 30px 0;
+  border-bottom: 1px solid rgba(33, 61, 143, 0.08);
+}
+
+.trustGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.trustIcon {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.trustTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.trustText {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* Footer Main styling */
+.footerMain {
+  background-color: #0f172a;
+  color: #e2e8f0;
+  padding: 60px 0;
+}
+
+.footerGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+  gap: 60px;
+}
+
+.footerCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-secondary);
+}
+
+.logoIcon {
+  color: var(--color-accent-yellow);
+}
+
+.logoText {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.storeIntro {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #94a3b8;
+}
+
+.workingHours {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--color-accent-yellow);
+  font-weight: 500;
+}
+
+.colTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  border-bottom: 2px solid var(--color-primary-medium);
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.linkList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footerLink {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  transition: var(--transition-fast);
+}
+
+.footerLink:hover {
+  color: var(--color-accent-yellow);
+  transform: translateX(4px);
+}
+
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contactRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #94a3b8;
+}
+
+.contactIcon {
+  color: var(--color-accent-yellow);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.callLink {
+  color: var(--color-secondary);
+  font-weight: 500;
+}
+
+.callLink:hover {
+  color: var(--color-accent-yellow);
+  text-decoration: underline;
+}
+
+/* Footer Bottom styling */
+.footerBottom {
+  background-color: #020617;
+  color: #64748b;
+  font-size: 0.8rem;
+  padding: 24px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.bottomContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.indoreBadge {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 900px) {
+  .trustGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .footerGrid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .bottomContent {
+    flex-direction: column;
+    text-align: center;
+  }
+}

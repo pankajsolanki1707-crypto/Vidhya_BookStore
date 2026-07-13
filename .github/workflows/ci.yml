@@ -1,0 +1,41 @@
+name: Vidhya Bookstore CI Pipeline
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout codebase
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js Environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # 3. Install Monorepo Dependencies
+      - name: Install Dependencies
+        run: npm ci
+
+      # 4. Generate Prisma Clients
+      - name: Generate Prisma Client
+        run: npm run db:generate
+
+      # 5. Build NestJS Backend
+      - name: Build NestJS Backend
+        run: npm run backend:build
+
+      # 6. Build Next.js 15 Frontend Client
+      - name: Build Next.js Frontend
+        run: npm run frontend:build
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:3001

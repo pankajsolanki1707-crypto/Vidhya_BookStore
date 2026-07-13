@@ -1,0 +1,33 @@
+[
+  {
+    "customerName": "asa",
+    "phone": "1123345544",
+    "telegram": "sasas",
+    "address": "sasa",
+    "city": "Indore",
+    "state": "Madhya Pradesh",
+    "pincode": "452009",
+    "items": [
+      {
+        "id": "upsc-polity-laxmikanth",
+        "title": "Indian Polity - 7th Edition",
+        "price": 795,
+        "quantity": 1,
+        "image": "https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=600&auto=format&fit=crop&q=60"
+      },
+      {
+        "id": "mppsc-prelims-kautilya-1",
+        "title": "MPPSC Prelims General Studies (Paper 1) - Complete Study Kit",
+        "price": 1250,
+        "quantity": 1,
+        "image": "/images/mppsc_prelims_cover.png"
+      }
+    ],
+    "totalAmount": 1840,
+    "paymentMethod": "COD",
+    "paymentReference": "CARD-7904",
+    "id": "VBS-877985-3032",
+    "createdAt": "2026-07-13T04:11:17.986Z",
+    "status": "Confirmed"
+  }
+]
