@@ -84,6 +84,40 @@
   border-color: rgba(239, 68, 68, 0.2);
 }
 
+/* Floating compare button */
+.compareBtn {
+  position: absolute;
+  top: 50px;
+  right: 12px;
+  background-color: var(--color-bg-white);
+  border: 1px solid var(--color-border);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-light);
+  cursor: pointer;
+  z-index: 15;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-sm);
+  outline: none;
+}
+
+.compareBtn:hover {
+  transform: scale(1.1);
+  color: var(--color-primary);
+  border-color: rgba(33, 61, 143, 0.2);
+}
+
+.compareBtn.compared {
+  color: var(--color-primary);
+  background-color: var(--color-accent-blue);
+  border-color: var(--color-primary-medium);
+}
+
+
 /* Book Image styling */
 .imageLink {
   background-color: var(--color-bg-light);
@@ -304,3 +338,40 @@
   color: var(--color-error);
   text-transform: uppercase;
 }
+
+/* Stock status display */
+.stockRow {
+  margin-bottom: 6px;
+  min-height: 18px;
+}
+
+.stockStatusLow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-error);
+  background-color: rgba(239, 68, 68, 0.08);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  display: inline-block;
+}
+
+.stockStatusIn {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-success);
+  background-color: rgba(16, 185, 129, 0.08);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  display: inline-block;
+}
+
+.stockStatusOut {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-text-light);
+  background-color: var(--color-bg-grey);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  display: inline-block;
+}
+

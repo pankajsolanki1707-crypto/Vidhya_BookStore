@@ -19,6 +19,13 @@ export default function CheckoutPage() {
   // Multi-step Checkout Step state (1: Shipping, 2: Payment, 3: Review)
   const [checkoutStep, setCheckoutStep] = useState<1 | 2 | 3>(1);
 
+  // Guest checkout and Store pickup options
+  const [isGuest, setIsGuest] = useState(false);
+  const [deliveryPreference, setDeliveryPreference] = useState<'deliver' | 'pickup'>('deliver');
+
+  // Gift wrap state
+  const [giftWrap, setGiftWrap] = useState(false);
+
   // State for shipping details
   const [customerName, setCustomerName] = useState('');
   const [phone, setPhone] = useState('');
@@ -28,6 +35,7 @@ export default function CheckoutPage() {
   const [state, setState] = useState('Madhya Pradesh');
   const [pincode, setPincode] = useState('');
   const [orderNotes, setOrderNotes] = useState('');
+
 
   // Coupon code states
   const [couponCode, setCouponCode] = useState('');
@@ -65,16 +73,23 @@ export default function CheckoutPage() {
   const cgstVal = basePriceExclGst * 0.09;
   const sgstVal = basePriceExclGst * 0.09;
   const totalGstVal = (cartTotal - couponDiscount) - basePriceExclGst;
-  const grandTotal = Math.max(0, cartTotal - couponDiscount + shippingCharge);
+  
+  const giftWrapCharge = giftWrap ? 30 : 0;
+  const grandTotal = Math.max(0, cartTotal - couponDiscount + (deliveryPreference === 'pickup' ? 0 : shippingCharge) + giftWrapCharge);
 
-  // Sync shipping charge based on cart total and pincode zone
+  // Sync shipping charge based on cart total, pincode zone, and delivery preference
   useEffect(() => {
+    if (deliveryPreference === 'pickup') {
+      setShippingCharge(0);
+      return;
+    }
     if (isIndoreZone) {
       setShippingCharge(cartTotal >= 499 ? 0 : 49);
     } else {
       setShippingCharge(cartTotal >= 999 ? 0 : 79);
     }
-  }, [cartTotal, isIndoreZone]);
+  }, [cartTotal, isIndoreZone, deliveryPreference]);
+
 
   // Pincode check simulator
   useEffect(() => {
@@ -158,16 +173,29 @@ export default function CheckoutPage() {
   const handleNextToPayment = (e: React.MouseEvent) => {
     e.preventDefault();
     setOrderError('');
-    if (!customerName || !phone || !address || !pincode) {
-      setOrderError('Please fill in all required shipping fields.');
-      return;
-    }
-    if (pincode.trim().length !== 6) {
-      setOrderError('Please enter a valid 6-digit postal pincode.');
-      return;
+    
+    if (deliveryPreference === 'pickup') {
+      if (!customerName || !phone) {
+        setOrderError('Please enter your Name and Mobile phone number.');
+        return;
+      }
+      setAddress('Self Storefront Pickup - payal plaza, Bhanwarkuan');
+      setPincode('452001');
+      setCity('Indore');
+      setState('Madhya Pradesh');
+    } else {
+      if (!customerName || !phone || !address || !pincode) {
+        setOrderError('Please fill in all required shipping fields.');
+        return;
+      }
+      if (pincode.trim().length !== 6) {
+        setOrderError('Please enter a valid 6-digit postal pincode.');
+        return;
+      }
     }
     setCheckoutStep(2);
   };
+
 
   const handleNextToReview = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -369,30 +397,105 @@ export default function CheckoutPage() {
               {checkoutStep === 1 && (
                 <>
                   <h3 className={styles.cardTitle}>Shipping Details</h3>
-                  <div className={styles.formGrid}>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="name">Full Name *</label>
-                      <input
-                        type="text"
-                        id="name"
-                        value={customerName}
-                        onChange={(e) => setCustomerName(e.target.value)}
-                        placeholder="e.g. Aditya Sharma"
-                        className={styles.input}
-                        required
+                  
+                  {/* Guest and Delivery Preferences */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', borderBottom: '1px solid var(--color-border)', paddingBottom: '20px', marginBottom: '10px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.88rem', fontWeight: 700, color: 'var(--color-text-main)', cursor: 'pointer' }}>
+                      <input 
+                        type="checkbox" 
+                        checked={isGuest} 
+                        onChange={(e) => setIsGuest(e.target.checked)} 
+                        style={{ accentColor: 'var(--color-primary)', width: '15px', height: '15px' }} 
                       />
+                      <span>Proceed as Guest Checkout (Skip Login/Register)</span>
+                    </label>
+
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+                      <button
+                        type="button"
+                        onClick={() => setDeliveryPreference('deliver')}
+                        style={{
+                          flex: 1,
+                          padding: '12px',
+                          borderRadius: '8px',
+                          border: deliveryPreference === 'deliver' ? '2px solid var(--color-primary)' : '1px solid var(--color-border)',
+                          backgroundColor: deliveryPreference === 'deliver' ? 'var(--color-primary-light)' : '#ffffff',
+                          fontWeight: 700,
+                          fontSize: '0.82rem',
+                          color: 'var(--color-primary)',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px'
+                        }}
+                      >
+                        🏃 Runner Delivery (Indore)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDeliveryPreference('pickup')}
+                        style={{
+                          flex: 1,
+                          padding: '12px',
+                          borderRadius: '8px',
+                          border: deliveryPreference === 'pickup' ? '2px solid var(--color-primary)' : '1px solid var(--color-border)',
+                          backgroundColor: deliveryPreference === 'pickup' ? 'var(--color-primary-light)' : '#ffffff',
+                          fontWeight: 700,
+                          fontSize: '0.82rem',
+                          color: 'var(--color-primary)',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px'
+                        }}
+                      >
+                        🏢 Store Pickup (Bhanwarkuan)
+                      </button>
                     </div>
-                    <div className={styles.formGroup}>
+                  </div>
+
+                  <div className={styles.formGrid}>
+                    <div className={styles.formGroup} style={{ position: 'relative' }}>
+                      <label htmlFor="name">Full Name *</label>
+                      <div style={{ position: 'relative' }}>
+                        <input
+                          type="text"
+                          id="name"
+                          value={customerName}
+                          onChange={(e) => setCustomerName(e.target.value)}
+                          placeholder="e.g. Aditya Sharma"
+                          className={styles.input}
+                          style={{ width: '100%', paddingRight: '36px' }}
+                          required
+                        />
+                        {customerName.trim().length > 2 && (
+                          <span style={{ position: 'absolute', right: '12px', top: '12px', color: 'var(--color-success)' }}>
+                            <CheckCircle size={16} />
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className={styles.formGroup} style={{ position: 'relative' }}>
                       <label htmlFor="phone">Contact Mobile Number *</label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="10-digit number"
-                        className={styles.input}
-                        required
-                      />
+                      <div style={{ position: 'relative' }}>
+                        <input
+                          type="tel"
+                          id="phone"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          placeholder="10-digit number"
+                          className={styles.input}
+                          style={{ width: '100%', paddingRight: '36px' }}
+                          required
+                        />
+                        {/^\d{10}$/.test(phone.trim()) && (
+                          <span style={{ position: 'absolute', right: '12px', top: '12px', color: 'var(--color-success)' }}>
+                            <CheckCircle size={16} />
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div className={styles.formGroupFull}>
                       <label htmlFor="telegram">Telegram Username (Optional)</label>
@@ -405,51 +508,74 @@ export default function CheckoutPage() {
                         className={styles.input}
                       />
                     </div>
-                    <div className={styles.formGroupFull}>
-                      <label htmlFor="address">Street Address (House No, Area, Hostels) *</label>
-                      <textarea
-                        id="address"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        placeholder="e.g. Room 24, Jagat Hostels, Near Kautilya Academy, Bhanwarkuan"
-                        className={styles.textarea}
-                        required
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="pincode">6-Digit Pincode *</label>
-                      <div style={{ position: 'relative' }}>
-                        <input
-                          type="text"
-                          id="pincode"
-                          value={pincode}
-                          onChange={(e) => setPincode(e.target.value)}
-                          placeholder="e.g. 452001"
-                          className={styles.input}
-                          maxLength={6}
-                          required
-                        />
-                        {pincodeChecking && (
-                          <span style={{ position: 'absolute', right: '12px', top: '12px' }}>
-                            <Loader2 className="animate-spin" size={16} />
-                          </span>
-                        )}
+
+                    {deliveryPreference === 'pickup' ? (
+                      <div style={{ padding: '20px', border: '1px solid #fef3c7', borderRadius: '12px', backgroundColor: '#fffbeb', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '8px', gridColumn: 'span 2', marginTop: '10px' }}>
+                        <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#b45309', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          🏢 Bhanwarkuan Payal Plaza Storefront (Indore)
+                        </span>
+                        <p style={{ fontSize: '0.8rem', color: '#78350f', lineHeight: 1.5, margin: 0 }}>
+                          <strong>Pickup location:</strong> B-6 Payal Plaza, right below Kautilya Academy, Bhanwarkuan Main Road, Indore.<br />
+                          <strong>Store timings:</strong> 9:00 AM to 9:30 PM (All days)<br />
+                          <strong>Local Phone Support:</strong> 9752809717<br />
+                          <span style={{ color: 'var(--color-success)', fontWeight: 700 }}>✓ Local delivery courier fee: FREE (Save ₹49!)</span>
+                        </p>
                       </div>
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="city">City / Hub Zone</label>
-                      <input
-                        type="text"
-                        id="city"
-                        value={city}
-                        className={styles.input}
-                        disabled
-                        style={{ opacity: 0.7, cursor: 'not-allowed' }}
-                      />
-                    </div>
+                    ) : (
+                      <>
+                        <div className={styles.formGroupFull}>
+                          <label htmlFor="address">Street Address (House No, Area, Hostels) *</label>
+                          <textarea
+                            id="address"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                            placeholder="e.g. Room 24, Jagat Hostels, Near Kautilya Academy, Bhanwarkuan"
+                            className={styles.textarea}
+                            required
+                          />
+                        </div>
+                        <div className={styles.formGroup}>
+                          <label htmlFor="pincode">6-Digit Pincode *</label>
+                          <div style={{ position: 'relative' }}>
+                            <input
+                              type="text"
+                              id="pincode"
+                              value={pincode}
+                              onChange={(e) => setPincode(e.target.value)}
+                              placeholder="e.g. 452001"
+                              className={styles.input}
+                              style={{ width: '100%', paddingRight: '36px' }}
+                              maxLength={6}
+                              required
+                            />
+                            {pincodeChecking && (
+                              <span style={{ position: 'absolute', right: '12px', top: '12px' }}>
+                                <Loader2 className="animate-spin" size={16} />
+                              </span>
+                            )}
+                            {/^\d{6}$/.test(pincode.trim()) && !pincodeChecking && (
+                              <span style={{ position: 'absolute', right: '12px', top: '12px', color: 'var(--color-success)' }}>
+                                <CheckCircle size={16} />
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className={styles.formGroup}>
+                          <label htmlFor="city">City / Hub Zone</label>
+                          <input
+                            type="text"
+                            id="city"
+                            value={city}
+                            className={styles.input}
+                            disabled
+                            style={{ opacity: 0.7, cursor: 'not-allowed' }}
+                          />
+                        </div>
+                      </>
+                    )}
                   </div>
 
-                  {pincodeChecked && (
+                  {deliveryPreference === 'deliver' && pincodeChecked && (
                     <div style={{ marginTop: '16px', padding: '12px', border: '1px solid var(--color-border)', borderRadius: '8px', backgroundColor: 'var(--color-bg-light)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                       <span style={{ fontSize: '0.85rem', color: 'var(--color-primary)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Truck size={16} /> Courier Logistics Assigned:
@@ -470,6 +596,7 @@ export default function CheckoutPage() {
                     <ArrowRight size={18} />
                   </button>
                 </>
+
               )}
 
               {/* STEP 2: PAYMENT METHOD */}
@@ -628,6 +755,19 @@ export default function CheckoutPage() {
                     )}
                   </div>
 
+                  {/* Gift Wrapping checkbox */}
+                  <div style={{ border: '1px dashed var(--color-border)', padding: '16px', borderRadius: '8px', backgroundColor: '#ffffff', marginBottom: '10px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.82rem', fontWeight: 700, color: 'var(--color-text-main)', cursor: 'pointer' }}>
+                      <input 
+                        type="checkbox" 
+                        checked={giftWrap} 
+                        onChange={(e) => setGiftWrap(e.target.checked)} 
+                        style={{ accentColor: 'var(--color-primary)' }} 
+                      />
+                      <Gift size={14} style={{ color: 'var(--color-primary)' }} /> Add Premium Gift Wrapping (+₹30)
+                    </label>
+                  </div>
+
                   {/* Order Notes */}
                   <div className={styles.formGroupFull}>
                     <label htmlFor="notes">Order Notes / Delivery Instructions</label>
@@ -644,7 +784,11 @@ export default function CheckoutPage() {
                     <strong style={{ color: 'var(--color-primary)', display: 'block', marginBottom: '8px' }}>Delivery Address Summary:</strong>
                     <p style={{ color: 'var(--color-text-muted)', lineHeight: '1.4' }}>
                       {customerName} | {phone}<br />
-                      {address}, {city}, {state} - {pincode}
+                      {deliveryPreference === 'pickup' ? (
+                        <span style={{ fontWeight: 600, color: 'var(--color-primary)' }}>🏢 Storefront Pickup: Bhanwarkuan Branch, Indore</span>
+                      ) : (
+                        <>{address}, {city}, {state} - {pincode}</>
+                      )}
                     </p>
                   </div>
 
@@ -706,6 +850,12 @@ export default function CheckoutPage() {
                       <span>-₹{couponDiscount}</span>
                     </div>
                   )}
+                  {giftWrap && (
+                    <div className={styles.pricingRow}>
+                      <span>Gift Wrapping</span>
+                      <span>₹30</span>
+                    </div>
+                  )}
                   <div className={styles.pricingRow}>
                     <span>Subtotal (Excl. Tax)</span>
                     <span style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>₹{basePriceExclGst.toFixed(2)}</span>
@@ -715,8 +865,8 @@ export default function CheckoutPage() {
                     <span style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>₹{totalGstVal.toFixed(2)}</span>
                   </div>
                   <div className={styles.pricingRow}>
-                    <span>Courier Delivery Fee</span>
-                    <span>{shippingCharge === 0 ? 'FREE' : `₹${shippingCharge}`}</span>
+                    <span>Delivery Fee ({deliveryPreference === 'pickup' ? 'Store Pickup' : courierPartner})</span>
+                    <span>{deliveryPreference === 'pickup' || shippingCharge === 0 ? 'FREE' : `₹${shippingCharge}`}</span>
                   </div>
                   <div className={styles.grandTotalRow}>
                     <span>Grand Total</span>
@@ -724,12 +874,20 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-text-light)', fontSize: '0.75rem', justifyContent: 'center' }}>
-                  <ShieldCheck size={14} />
-                  <span>Secure 256-Bit SSL Registry</span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', color: 'var(--color-text-light)', fontSize: '0.75rem', justifyContent: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <ShieldCheck size={14} style={{ color: 'var(--color-success)' }} />
+                    <span>Secure 256-Bit SSL Registry</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '6px' }}>
+                    {['UPI', 'GPay', 'PhonePe', 'COD', 'Cards'].map(p => (
+                      <span key={p} style={{ fontSize: '0.62rem', fontWeight: 700, border: '1px solid var(--color-border)', padding: '2px 8px', borderRadius: '4px', color: 'var(--color-text-light)', backgroundColor: '#ffffff' }}>{p}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
+
 
           </div>
         </div>

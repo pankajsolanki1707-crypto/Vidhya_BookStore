@@ -16,6 +16,8 @@ export default function MegaSearchConsole() {
   const [isListening, setIsListening] = useState(false);
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   
+  const [activeIndex, setActiveIndex] = useState(-1);
+  
   const consoleRef = useRef<HTMLDivElement>(null);
 
   // Load history on mount
@@ -45,6 +47,7 @@ export default function MegaSearchConsole() {
         if (res.ok) {
           const data = await res.json();
           setSuggestions(data.products || []);
+          setActiveIndex(-1); // Reset index on new search
         }
       } catch (err) {
         console.error('Error fetching search suggestions:', err);
@@ -108,6 +111,27 @@ export default function MegaSearchConsole() {
     setShowSuggestions(false);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showSuggestions || suggestions.length === 0) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveIndex(prev => (prev < suggestions.length - 1 ? prev + 1 : 0));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveIndex(prev => (prev > 0 ? prev - 1 : suggestions.length - 1));
+    } else if (e.key === 'Enter') {
+      if (activeIndex >= 0 && activeIndex < suggestions.length) {
+        e.preventDefault();
+        const selected = suggestions[activeIndex];
+        router.push(`/books/${selected.id}`);
+        setQuery('');
+        setShowSuggestions(false);
+      }
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
+    }
+  };
+
   const startVoiceSearch = () => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -162,6 +186,7 @@ export default function MegaSearchConsole() {
             setShowSuggestions(true);
           }}
           onFocus={() => setShowSuggestions(true)}
+          onKeyDown={handleKeyDown}
           className={styles.megaSearchInput}
         />
 
@@ -217,13 +242,16 @@ export default function MegaSearchConsole() {
               ) : suggestions.length > 0 ? (
                 <>
                   <div className={styles.suggestionsList}>
-                    {suggestions.map((book) => (
+                    {suggestions.map((book, idx) => (
                       <div
                         key={book.id}
                         onClick={() => {
                           router.push(`/books/${book.id}`);
                           setQuery('');
                           setShowSuggestions(false);
+                        }}
+                        style={{
+                          backgroundColor: idx === activeIndex ? 'var(--color-primary-light)' : undefined,
                         }}
                         className={styles.suggestionRow}
                       >

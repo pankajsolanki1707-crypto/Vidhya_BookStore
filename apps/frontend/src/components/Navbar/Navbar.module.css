@@ -376,7 +376,7 @@
   top: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(15px);
-  width: 780px;
+  width: 960px;
   background-color: var(--color-bg-white);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -396,7 +396,7 @@
 
 .megaMenuGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: var(--space-3);
 }
 
@@ -439,6 +439,52 @@
 .itemIcon {
   font-size: 1rem;
 }
+
+.megaMenuPromoColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  background-color: var(--color-bg-light);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: var(--transition-smooth);
+}
+
+.megaMenuPromoColumn:hover {
+  border-color: var(--color-accent-yellow);
+  background-color: var(--color-accent-yellow-light);
+  transform: scale(1.02);
+}
+
+.promoLabel {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #854d0e;
+  background-color: #fef9c3;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  margin-bottom: 8px;
+}
+
+.promoImage {
+  width: 100%;
+  max-height: 90px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 8px;
+}
+
+.promoLink {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
 
 /* Media Queries */
 @media (max-width: 1024px) {

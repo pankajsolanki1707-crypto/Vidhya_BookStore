@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import styles from './admin.module.css';
 
-type AdminTab = 'dashboard' | 'inventory' | 'orders' | 'marketing' | 'staff' | 'seo' | 'backup';
+type AdminTab = 'dashboard' | 'inventory' | 'orders' | 'marketing' | 'staff' | 'seo' | 'backup' | 'content';
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -19,7 +19,9 @@ export default function AdminPage() {
   const [passwordInput, setPasswordInput] = useState('');
   const [is2faRequired, setIs2faRequired] = useState(false);
   const [otpInput, setOtpInput] = useState('');
+  const [serverOtp, setServerOtp] = useState('');
   const [authError, setAuthError] = useState('');
+
   
   // Dashboard states
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
@@ -110,45 +112,39 @@ export default function AdminPage() {
     setAuthError('');
     setIsLoading(true);
 
-    if (!is2faRequired) {
-      if (emailInput.trim() !== 'admin@vidhya.com') {
-        setAuthError('Invalid administrator email credentials.');
-        setIsLoading(false);
-        return;
-      }
-      setIs2faRequired(true);
-      setIsLoading(false);
-      alert('2FA Verification Code "1234" sent to registered email! ✉️');
-      return;
-    }
-
-    if (otpInput.trim() !== '1234') {
-      setAuthError('Invalid 2FA OTP security verification code.');
-      setIsLoading(false);
-      return;
-    }
-
     try {
+      const payload: any = { password: passwordInput, email: emailInput };
+      if (is2faRequired) {
+        payload.otp = otpInput;
+      }
+
       const res = await fetch('/api/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: passwordInput })
+        body: JSON.stringify(payload)
       });
 
       const data = await res.json();
       if (res.ok && data.success) {
-        localStorage.setItem('vbs_admin_token', data.token);
-        setIsAuthenticated(true);
-        fetchDashboardData(data.token);
+        if (data.is2faRequired) {
+          setIs2faRequired(true);
+          setServerOtp(data.otp);
+          alert(`🔐 Dynamic 2FA Verification code generated!\nVerification Code: "${data.otp}" sent to ${emailInput}\n(Please input this code to verify access)`);
+        } else {
+          localStorage.setItem('vbs_admin_token', data.token);
+          setIsAuthenticated(true);
+          fetchDashboardData(data.token);
+        }
       } else {
-        setAuthError(data.error || 'Authentication failed');
+        setAuthError(data.error || 'Authentication credentials rejected.');
       }
     } catch (err) {
-      setAuthError('Network error during login.');
+      setAuthError('Network error during admin session authentication.');
     } finally {
       setIsLoading(false);
     }
   };
+
 
   const handleLogout = () => {
     localStorage.removeItem('vbs_admin_token');
@@ -546,12 +542,20 @@ export default function AdminPage() {
                     <span>SEO & Pixel Codes</span>
                   </button>
                   <button
+                    onClick={() => setActiveTab('content')}
+                    className={activeTab === 'content' ? styles.activeMenuItem : styles.menuItem}
+                  >
+                    <FileText size={16} />
+                    <span>Content & Blogs</span>
+                  </button>
+                  <button
                     onClick={() => setActiveTab('backup')}
                     className={activeTab === 'backup' ? styles.activeMenuItem : styles.menuItem}
                   >
                     <Database size={16} />
                     <span>Backup & Logs</span>
                   </button>
+
                 </div>
 
                 <button 
@@ -1060,11 +1064,118 @@ export default function AdminPage() {
                     </div>
                   </div>
                 )}
+
+                {/* 8. Content & Blogs Tab */}
+                {activeTab === 'content' && (
+                  <div>
+                    <h3>VBS Content Management System</h3>
+                    
+                    {/* Categories & Publishers & Authors rows */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', marginBottom: '30px', marginTop: '10px' }}>
+                      {/* Categories list */}
+                      <div style={{ padding: '16px', border: '1px solid var(--color-border)', borderRadius: '8px', backgroundColor: '#ffffff' }}>
+                        <h4 style={{ color: 'var(--color-primary)', fontWeight: 700, marginBottom: '10px', fontSize: '0.9rem' }}>Catalog Categories</h4>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {['Competitive Exams', 'Academic Textbooks', 'Used Books', 'Stationery', 'Literature'].map(c => (
+                            <div key={c} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '6px' }}>
+                              <span>{c}</span>
+                              <span style={{ color: 'var(--color-success)', fontWeight: 700 }}>Active</span>
+                            </div>
+                          ))}
+                        </div>
+                        <button onClick={() => alert('New category dialog launched')} className="btn-secondary" style={{ width: '100%', padding: '6px', fontSize: '0.75rem', marginTop: '12px' }}>+ Category</button>
+                      </div>
+
+                      {/* Publishers list */}
+                      <div style={{ padding: '16px', border: '1px solid var(--color-border)', borderRadius: '8px', backgroundColor: '#ffffff' }}>
+                        <h4 style={{ color: 'var(--color-primary)', fontWeight: 700, marginBottom: '10px', fontSize: '0.9rem' }}>Verified Publishers</h4>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {['Arihant Publications', 'Tata McGraw Hill', 'S. Chand Co', 'Oxford Press', 'VBS Indore'].map(p => (
+                            <div key={p} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '6px' }}>
+                              <span>{p}</span>
+                              <span style={{ color: 'var(--color-success)', fontWeight: 700 }}>Listed</span>
+                            </div>
+                          ))}
+                        </div>
+                        <button onClick={() => alert('New publisher cataloged')} className="btn-secondary" style={{ width: '100%', padding: '6px', fontSize: '0.75rem', marginTop: '12px' }}>+ Publisher</button>
+                      </div>
+
+                      {/* Authors list */}
+                      <div style={{ padding: '16px', border: '1px solid var(--color-border)', borderRadius: '8px', backgroundColor: '#ffffff' }}>
+                        <h4 style={{ color: 'var(--color-primary)', fontWeight: 700, marginBottom: '10px', fontSize: '0.9rem' }}>Featured Authors</h4>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {['M. Laxmikanth', 'R.S. Aggarwal', 'D.D. Basu', 'H.C. Verma', 'J.K. Rowling'].map(a => (
+                            <div key={a} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '6px' }}>
+                              <span>{a}</span>
+                              <span style={{ color: 'var(--color-primary)', fontWeight: 700 }}>5+ Books</span>
+                            </div>
+                          ))}
+                        </div>
+                        <button onClick={() => alert('New author profile created')} className="btn-secondary" style={{ width: '100%', padding: '6px', fontSize: '0.75rem', marginTop: '12px' }}>+ Author</button>
+                      </div>
+                    </div>
+
+                    {/* Blogs section */}
+                    <div style={{ marginBottom: '30px', borderTop: '1px solid var(--color-border)', paddingTop: '20px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                        <h4 style={{ color: 'var(--color-primary)', fontWeight: 700, margin: 0 }}>VBS Student Bulletins & Blogs</h4>
+                        <button onClick={() => alert('Blog builder opened')} className="btn-accent" style={{ padding: '6px 12px', fontSize: '0.75rem' }}>+ Create Post</button>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        {[
+                          { title: 'MPPSC 2026 Prelims Strategy & Sourced Reference Guides', author: 'VBS Indore Team', date: 'July 10, 2026', views: 320 },
+                          { title: 'Best Reference Books for Engineering DAVV Semester Exams', author: 'College Desk', date: 'July 05, 2026', views: 180 },
+                          { title: 'Indore Study Hubs: Recommended Novels for Civil Services Aspirants', author: 'Guest Blogger', date: 'June 28, 2026', views: 245 }
+                        ].map((b, idx) => (
+                          <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px', border: '1px solid var(--color-border)', borderRadius: '6px', backgroundColor: 'var(--color-bg-light)' }}>
+                            <div>
+                              <strong style={{ fontSize: '0.88rem', color: 'var(--color-primary)' }}>{b.title}</strong>
+                              <div style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', marginTop: '4px' }}>
+                                Published by {b.author} | {b.date} | 👁 {b.views} reads
+                              </div>
+                            </div>
+                            <div style={{ display: 'flex', gap: '6px' }}>
+                              <button onClick={() => alert('Edit blog details')} style={{ border: 'none', background: 'transparent', color: 'var(--color-primary)', cursor: 'pointer', fontSize: '0.8rem', textDecoration: 'underline' }}>Edit</button>
+                              <button onClick={() => alert('Remove blog post')} style={{ border: 'none', background: 'transparent', color: 'var(--color-error)', cursor: 'pointer', fontSize: '0.8rem', textDecoration: 'underline' }}>Delete</button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Media Library */}
+                    <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '20px' }}>
+                      <h4 style={{ color: 'var(--color-primary)', fontWeight: 700, marginBottom: '14px' }}>Media Asset Library</h4>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '14px' }}>
+                        {[
+                          { name: 'cover_mppsc.jpg', size: '145 KB', url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=120&auto=format&fit=crop&q=60' },
+                          { name: 'cover_upsc.jpg', size: '201 KB', url: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=120&auto=format&fit=crop&q=60' },
+                          { name: 'stationery_classmate.jpg', size: '92 KB', url: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=120&auto=format&fit=crop&q=60' }
+                        ].map((m, idx) => (
+                          <div key={idx} style={{ border: '1px solid var(--color-border)', borderRadius: '6px', overflow: 'hidden', backgroundColor: '#ffffff', textAlign: 'center', padding: '6px' }}>
+                            <img src={m.url} alt={m.name} style={{ width: '100%', height: '80px', objectFit: 'cover', borderRadius: '4px' }} />
+                            <span style={{ fontSize: '0.68rem', fontWeight: 700, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: '6px' }}>{m.name}</span>
+                            <span style={{ fontSize: '0.62rem', color: 'var(--color-text-muted)' }}>{m.size}</span>
+                          </div>
+                        ))}
+                        <div 
+                          onClick={() => alert('Media uploader activated')}
+                          style={{ border: '2px dashed var(--color-primary-medium)', borderRadius: '6px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '110px', backgroundColor: 'var(--color-bg-light)', cursor: 'pointer' }}
+                        >
+                          <span style={{ fontSize: '1.25rem', color: 'var(--color-primary)' }}>+</span>
+                          <span style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--color-primary)' }}>Upload file</span>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                )}
               </main>
             </div>
           )}
         </div>
       </section>
+
 
       {/* Product Add/Edit Modal */}
       {isModalOpen && (

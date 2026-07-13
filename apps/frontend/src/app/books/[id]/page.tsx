@@ -13,6 +13,7 @@ import SpecsCompare from '@/components/SpecsCompare/SpecsCompare';
 import PreviewModal from './PreviewModal';
 import { getProductById, getProducts } from '@/lib/database';
 import { ChevronRight, Star, MapPin, ShieldCheck, RefreshCw, Send, Truck, HelpCircle, CheckCircle } from 'lucide-react';
+import { ImageZoom, UrgencyNotifier, SpecsTabs, StickyPurchaseBar } from '@/components/ProductDetailClientActions';
 import styles from './details.module.css';
 
 interface PageProps {
@@ -135,8 +136,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
           <div className={styles.detailGrid}>
             {/* Left Column: Images, Share, Wishlist, Compare */}
             <div className={styles.imageCol}>
-              <div className={styles.imageContainer}>
-                <img src={product.image} alt={product.title} className={styles.image} />
+              <div className={styles.imageContainer} style={{ overflow: 'hidden', padding: 0 }}>
+                <ImageZoom src={product.image} alt={product.title} />
               </div>
               
               {/* look inside pages link */}
@@ -187,6 +188,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   {product.rating} stars ({product.reviewCount} customer reviews)
                 </span>
               </div>
+              <UrgencyNotifier category={product.category} />
+
 
               {/* Pricing section */}
               <div className={styles.priceBlock}>
@@ -218,25 +221,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 </div>
               </div>
 
-              {/* Highlights block */}
-              <div style={{ marginTop: '20px' }}>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-primary)' }}>Key Highlights</h3>
-                <ul className={styles.highlightsList}>
-                  {highlights.map((hl, index) => (
-                    <li key={index} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                      <CheckCircle size={14} style={{ color: 'var(--color-success)', flexShrink: 0, marginTop: '3px' }} />
-                      <span>{hl}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Description & Specifications Table */}
+              {/* Highlights & Description Tabs */}
               <div className={styles.specsSection}>
-                <h3 className={styles.specsTitle}>Description</h3>
-                <p className={styles.description}>{product.description}</p>
+                <SpecsTabs product={product} />
 
                 <h3 className={styles.specsTitle} style={{ marginTop: '24px' }}>Specifications</h3>
+
                 <table className={styles.specsTable}>
                   <tbody>
                     <tr>
@@ -385,7 +375,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
         </div>
       </section>
 
+      <StickyPurchaseBar product={product} />
       <Footer />
     </div>
   );
 }
+

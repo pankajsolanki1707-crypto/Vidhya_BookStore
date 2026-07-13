@@ -9,6 +9,7 @@ import CountdownTimer from '@/components/CountdownTimer/CountdownTimer';
 import FaqAccordion from '@/components/FaqAccordion/FaqAccordion';
 import NewsletterForm from '@/components/NewsletterForm/NewsletterForm';
 import { getProducts } from '@/lib/database';
+import ConversionBoosters from '@/components/ConversionBoosters';
 import {
   ArrowRight, GraduationCap, PenTool, BookOpen, Star,
   MapPin, Phone, Send, ShieldCheck, BadgePercent,
@@ -16,6 +17,7 @@ import {
   Library, Clock, MessageSquare, FileText, ShoppingBag
 } from 'lucide-react';
 import styles from './home.module.css';
+
 
 export default function Home() {
   const products = getProducts();
@@ -586,6 +588,10 @@ export default function Home() {
           </a>
         </div>
       </nav>
+
+      {/* Conversion Booster popups */}
+      <ConversionBoosters />
     </div>
   );
 }
+

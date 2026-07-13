@@ -34,14 +34,41 @@ export function checkRateLimit(ip: string): boolean {
 }
 
 /**
- * Encrypt password using SHA-256 and salt
+ * Secure password hashing using cryptographic scrypt (Argon2 replacement)
  */
 export function encryptPassword(password: string): string {
-  return crypto
-    .createHmac('sha256', SECRET_KEY)
-    .update(password)
-    .digest('hex');
+  const salt = 'vbs_secure_salt_mppsc_2026_indore';
+  // Enterprise-standard scrypt parameters
+  const key = crypto.scryptSync(password, salt, 64, { N: 16384, r: 8, p: 1 });
+  return key.toString('hex');
 }
+
+// In-memory OTP storage
+const otpMap = new Map<string, { code: string; expires: number }>();
+
+export function generateOTP(email: string): string {
+  const code = Math.floor(1000 + Math.random() * 9000).toString();
+  otpMap.set(email, {
+    code,
+    expires: Date.now() + 5 * 60 * 1000 // 5 minutes expiration
+  });
+  return code;
+}
+
+export function verifyOTP(email: string, code: string): boolean {
+  const record = otpMap.get(email);
+  if (!record) return false;
+  if (record.expires < Date.now()) {
+    otpMap.delete(email);
+    return false;
+  }
+  const match = record.code === code;
+  if (match) {
+    otpMap.delete(email);
+  }
+  return match;
+}
+
 
 /**
  * Cryptographic JWT Signature Generator (Enterprise-Grade)

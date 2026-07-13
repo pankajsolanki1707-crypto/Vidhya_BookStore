@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/lib/database';
-import { Star, ShoppingCart, Tag, Heart, Eye } from 'lucide-react';
+import { Star, ShoppingCart, Tag, Heart, Eye, GitCompare } from 'lucide-react';
 import styles from './BookCard.module.css';
 
 interface BookCardProps {
@@ -14,22 +14,29 @@ interface BookCardProps {
 export default function BookCard({ product }: BookCardProps) {
   const { addToCart } = useCart();
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isCompared, setIsCompared] = useState(false);
   
   // Calculate discount percentage if original price exists
   const discountPercent = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
 
-  // Load wishlist status on mount
+  // Load wishlist and compare status on mount
   useEffect(() => {
     try {
-      const stored = localStorage.getItem('vbs_wishlist');
-      if (stored) {
-        const items = JSON.parse(stored) as Product[];
+      const storedWishlist = localStorage.getItem('vbs_wishlist');
+      if (storedWishlist) {
+        const items = JSON.parse(storedWishlist) as Product[];
         setIsWishlisted(items.some(item => item.id === product.id));
       }
+
+      const storedCompare = localStorage.getItem('vbs_compare');
+      if (storedCompare) {
+        const items = JSON.parse(storedCompare) as Product[];
+        setIsCompared(items.some(item => item.id === product.id));
+      }
     } catch (e) {
-      console.error('Error reading wishlist:', e);
+      console.error('Error reading storage:', e);
     }
   }, [product.id]);
 
@@ -57,6 +64,35 @@ export default function BookCard({ product }: BookCardProps) {
     }
   };
 
+  const toggleCompare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const stored = localStorage.getItem('vbs_compare');
+      let items: Product[] = [];
+      if (stored) {
+        items = JSON.parse(stored) as Product[];
+      }
+      const exists = items.some(item => item.id === product.id);
+      let updated: Product[];
+      if (exists) {
+        updated = items.filter(item => item.id !== product.id);
+        setIsCompared(false);
+      } else {
+        if (items.length >= 3) {
+          alert('You can compare a maximum of 3 books at a time.');
+          return;
+        }
+        updated = [...items, product];
+        setIsCompared(true);
+      }
+      localStorage.setItem('vbs_compare', JSON.stringify(updated));
+      window.dispatchEvent(new Event('vbs_compare_changed'));
+    } catch (e) {
+      console.error('Error toggling compare:', e);
+    }
+  };
+
   // Determine Ribbon tag
   let ribbonText = "";
   let ribbonClass = "";
@@ -77,6 +113,17 @@ export default function BookCard({ product }: BookCardProps) {
     ribbonClass = styles.ribbonTrending;
   }
 
+  // Stock status text
+  const getStockStatus = () => {
+    if (!product.inStock) {
+      return <span className={styles.stockStatusOut}>Out of Stock</span>;
+    }
+    if (product.stockCount && product.stockCount <= 5) {
+      return <span className={styles.stockStatusLow}>Only {product.stockCount} left in stock!</span>;
+    }
+    return <span className={styles.stockStatusIn}>In Stock</span>;
+  };
+
   return (
     <div className={styles.card}>
       {/* Ribbons Overlay */}
@@ -94,6 +141,17 @@ export default function BookCard({ product }: BookCardProps) {
         aria-label="Toggle Wishlist"
       >
         <Heart size={16} fill={isWishlisted ? 'var(--color-error)' : 'none'} />
+      </button>
+
+      {/* Floating Compare Icon */}
+      <button 
+        type="button" 
+        onClick={toggleCompare} 
+        className={`${styles.compareBtn} ${isCompared ? styles.compared : ''}`}
+        title="Compare specifications"
+        aria-label="Toggle Compare"
+      >
+        <GitCompare size={16} />
       </button>
 
       {/* Book Image */}
@@ -142,6 +200,11 @@ export default function BookCard({ product }: BookCardProps) {
             ))}
           </div>
           <span className={styles.reviews}>({product.reviewCount})</span>
+        </div>
+
+        {/* Stock status indicator */}
+        <div className={styles.stockRow}>
+          {getStockStatus()}
         </div>
 
         {/* Estimated Delivery */}
