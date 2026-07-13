@@ -557,7 +557,12 @@ export default function Home() {
         className={styles.whatsappFab}
         aria-label="Chat on WhatsApp"
       >
-        <MessageSquare size={24} />
+        {/* Official WhatsApp SVG logo */}
+        <svg className={styles.whatsappFabIcon} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="16" cy="16" r="16" fill="white" fillOpacity="0.2"/>
+          <path fillRule="evenodd" clipRule="evenodd" d="M16 5C10.477 5 6 9.477 6 15c0 1.9.53 3.674 1.448 5.19L6 26l5.978-1.424A10.003 10.003 0 0016 25c5.523 0 10-4.477 10-10S21.523 5 16 5zm-3.47 5.714c-.2-.445-.41-.454-.6-.462-.155-.006-.332-.006-.51-.006-.177 0-.465.066-.71.332-.244.266-.932.91-.932 2.22s.954 2.575 1.088 2.753c.132.177 1.843 2.964 4.564 4.038 2.253.89 2.72.713 3.21.668.489-.044 1.578-.645 1.8-1.267.222-.622.222-1.155.155-1.267-.066-.111-.244-.177-.51-.31-.267-.133-1.578-.778-1.822-.866-.244-.089-.422-.133-.6.133-.177.267-.688.867-.843 1.044-.155.178-.31.2-.577.067-.267-.134-1.127-.415-2.146-1.322-.793-.707-1.328-1.58-1.484-1.847-.155-.266-.017-.41.117-.543.12-.12.266-.31.4-.465.133-.155.177-.266.266-.444.089-.178.044-.333-.022-.466-.067-.133-.578-1.445-.793-1.977z" fill="white"/>
+        </svg>
+        <span className={styles.whatsappFabLabel}>Chat with Us</span>
       </a>
 
       {/* Mobile Sticky Bottom Navigation */}
