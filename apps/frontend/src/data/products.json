@@ -504,5 +504,28 @@
     "featured": true,
     "isBestseller": true,
     "isNewArrival": true
+  },
+  {
+    "id": "novels-power-subconscious-mind",
+    "title": "The Power of your Subconscious Mind",
+    "author": "Dr. Joseph Murphy",
+    "publisher": "Pocket Books",
+    "price": 149,
+    "originalPrice": 199,
+    "category": "Novels & Literature",
+    "subcategory": "Self-Help",
+    "format": "Paperback",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600",
+    "description": "One of the most beloved and bestselling self-help guides of all time. Explains how you can use your subconscious mind to build confidence, heal your body, and achieve success.",
+    "rating": 4.7,
+    "reviewCount": 4200,
+    "inStock": true,
+    "stockCount": 80,
+    "isbn": "978-81-2914-041-8",
+    "pages": 312,
+    "publishYear": 2016,
+    "featured": true,
+    "isBestseller": true,
+    "isNewArrival": false
   }
 ]
