@@ -17,6 +17,8 @@ import { ImageZoom, UrgencyNotifier, SpecsTabs, StickyPurchaseBar, ExpressBuyBut
 import type { Metadata } from 'next';
 import styles from './details.module.css';
 
+export const dynamic = 'force-dynamic';
+
 
 interface PageProps {
   params: Promise<{ id: string }>;

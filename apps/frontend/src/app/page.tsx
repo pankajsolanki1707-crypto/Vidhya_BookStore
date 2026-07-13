@@ -11,6 +11,9 @@ import NewsletterForm from '@/components/NewsletterForm/NewsletterForm';
 import { getProducts } from '@/lib/database';
 import ConversionBoosters from '@/components/ConversionBoosters';
 import StudentHub from '@/components/StudentHub';
+
+export const dynamic = 'force-dynamic';
+
 import {
   ArrowRight, GraduationCap, PenTool, BookOpen, Star,
   MapPin, Phone, Send, ShieldCheck, BadgePercent,

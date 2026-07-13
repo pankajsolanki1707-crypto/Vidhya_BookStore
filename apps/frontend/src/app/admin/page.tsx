@@ -699,8 +699,93 @@ export default function AdminPage() {
                       onClick={() => {
                         const fileInput = document.createElement('input');
                         fileInput.type = 'file';
-                        fileInput.accept = '.csv,.xlsx';
-                        fileInput.onchange = () => alert('CSV file read successfully! Sourced 15 new books. ✓');
+                        fileInput.accept = '.csv';
+                        fileInput.onchange = async (event) => {
+                          const file = (event.target as HTMLInputElement).files?.[0];
+                          if (!file) return;
+
+                          const reader = new FileReader();
+                          reader.onload = async (e) => {
+                            const text = e.target?.result as string;
+                            if (!text) return;
+
+                            try {
+                              const lines = text.split('\n');
+                              const newProducts: any[] = [];
+                              const token = localStorage.getItem('vbs_admin_token');
+
+                              let parsedCount = 0;
+                              for (let i = 0; i < lines.length; i++) {
+                                const line = lines[i].trim();
+                                if (!line) continue;
+
+                                // Skip CSV header row if it contains header names
+                                if (i === 0 && (line.toLowerCase().includes('title') || line.toLowerCase().includes('price'))) {
+                                  continue;
+                                }
+
+                                const parts = line.split(',').map(s => s.replace(/^"|"$/g, '').trim());
+                                if (parts.length < 3) continue;
+
+                                const title = parts[0] || 'Imported Book';
+                                const author = parts[1] || 'Unknown Author';
+                                const price = Number(parts[2]) || 299;
+                                const originalPrice = parts[3] ? Number(parts[3]) : undefined;
+                                const category = parts[4] || 'Competitive Exams';
+                                const format = parts[5] || 'Paperback';
+                                const stockCount = parts[6] ? Number(parts[6]) : 15;
+                                const image = parts[7] || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600';
+                                const description = parts[8] || 'Imported exam guides study kit.';
+                                const isbn = parts[9] || '978-81-' + Math.floor(100000000 + Math.random() * 900000000);
+
+                                const newProd = {
+                                  title,
+                                  author,
+                                  price,
+                                  originalPrice,
+                                  category,
+                                  format,
+                                  stockCount,
+                                  image,
+                                  description,
+                                  isbn,
+                                  inStock: stockCount > 0,
+                                  featured: false,
+                                  isNewArrival: true,
+                                  isBestseller: false,
+                                  rating: 4.5,
+                                  reviewCount: 12
+                                };
+
+                                const res = await fetch('/api/products', {
+                                  method: 'POST',
+                                  headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': token || ''
+                                  },
+                                  body: JSON.stringify(newProd)
+                                });
+
+                                if (res.ok) {
+                                  const created = await res.json();
+                                  newProducts.push(created);
+                                  parsedCount++;
+                                }
+                              }
+
+                              if (parsedCount > 0) {
+                                setProducts(prev => [...newProducts, ...prev]);
+                                alert(`✓ Bulk Import Complete!\nParsed and uploaded ${parsedCount} new books into the database successfully!`);
+                              } else {
+                                alert('Could not find valid book entries in the CSV file.');
+                              }
+                            } catch (err) {
+                              console.error('Error parsing CSV file:', err);
+                              alert('Error parsing CSV format. Please make sure fields are comma-separated.');
+                            }
+                          };
+                          reader.readAsText(file);
+                        };
                         fileInput.click();
                       }}
                     >
@@ -709,6 +794,7 @@ export default function AdminPage() {
                         <strong>Bulk Import Catalog</strong><br/>Click here to upload Excel or CSV sheets containing book listings
                       </div>
                     </div>
+
 
                     {/* Bulk Price update form */}
                     <form 
