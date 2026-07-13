@@ -23,6 +23,10 @@ dist/
 *.sqlite
 *.sqlite-journal
 db.sqlite
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
 
 # misc
 .DS_Store
