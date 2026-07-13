@@ -550,5 +550,28 @@
     "featured": true,
     "isBestseller": false,
     "isNewArrival": true
+  },
+  {
+    "id": "novels-wings-of-fire",
+    "title": "Wings of Fire: An Autobiography",
+    "author": "A.P.J. Abdul Kalam",
+    "publisher": "Universities Press",
+    "price": 195,
+    "originalPrice": 295,
+    "category": "Novels & Literature",
+    "subcategory": "Biographies",
+    "format": "Paperback",
+    "image": "/images/wings_of_fire.jpg",
+    "description": "The inspiring autobiography of Dr. A.P.J. Abdul Kalam, the former President of India and the pioneer of India's space and missile research programs. Co-authored with Arun Tiwari.",
+    "rating": 4.9,
+    "reviewCount": 3120,
+    "inStock": true,
+    "stockCount": 75,
+    "isbn": "978-81-7371-146-6",
+    "pages": 180,
+    "publishYear": 1999,
+    "featured": true,
+    "isBestseller": true,
+    "isNewArrival": true
   }
 ]
