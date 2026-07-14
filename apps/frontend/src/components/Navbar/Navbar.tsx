@@ -22,6 +22,21 @@ export default function Navbar() {
   
   const searchRef = useRef<HTMLDivElement>(null);
 
+  // Rotating Announcement Bar state
+  const announcements = [
+    "🚚 Free local delivery in Indore on all orders above ₹499!",
+    "🎉 Promo Coupon: Use VIDHYA10 to get 10% OFF on all books!",
+    "⚡ Welcome Coupon: Use WELCOME50 to save ₹50 instantly on checkout!"
+  ];
+  const [currentAnnouncementIndex, setCurrentAnnouncementIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentAnnouncementIndex(prev => (prev + 1) % announcements.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
   // Sync comparison items from localStorage
   useEffect(() => {
     const loadCompare = () => {
@@ -142,7 +157,7 @@ export default function Navbar() {
               <span>Telegram Support: <a href="https://t.me/+918982883332" target="_blank" rel="noopener noreferrer">8982883332</a></span>
             </div>
             <div className={styles.announcement}>
-              <span>🚚 Free home delivery in Indore on orders above ₹499!</span>
+              <span>{announcements[currentAnnouncementIndex]}</span>
             </div>
           </div>
         </div>

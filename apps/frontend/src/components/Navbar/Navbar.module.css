@@ -40,7 +40,26 @@
 }
 
 .announcement {
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--color-accent-yellow);
+  animation: announcementFade 4s infinite;
+  min-width: 320px;
+  text-align: right;
+}
+
+@keyframes announcementFade {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  8%, 92% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  98% {
+    opacity: 0;
+    transform: translateY(2px);
+  }
 }
 
 /* Navbar main styles */
