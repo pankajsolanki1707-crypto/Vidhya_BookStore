@@ -292,33 +292,48 @@ export function StickyPurchaseBar({ product }: { product: Product }) {
 // 5. EXPRESS CHECKOUT BUTTON
 // --------------------------------------------------
 export function ExpressBuyButton({ product }: { product: Product }) {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem('vbs_user_token');
-    if (token) {
-      setIsUserLoggedIn(true);
-    }
-  }, []);
 
   const handleExpressBuy = async () => {
     setLoading(true);
-    // Simulate placing order instantly
-    setTimeout(() => {
-      setLoading(false);
-      alert(`⚡ Express Order Placed Successfully!\n\nProduct: "${product.title}"\nPayment Method: Pay on Delivery (COD)\nDelivery Address: Default Registered Student Hostel Address\n\nThank you for choosing Vidhya Express Checkout! ✓`);
-      window.location.href = `/account`;
-    }, 1500);
-  };
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName: 'Express Checkout Student',
+          phone: '9876543210',
+          telegram: '',
+          address: 'Bhanwarkuan Hostels Area, Zone A',
+          city: 'Indore',
+          state: 'Madhya Pradesh',
+          pincode: '452001',
+          items: [{
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            quantity: 1,
+            image: product.image
+          }],
+          totalAmount: product.price,
+          paymentMethod: 'COD',
+          paymentReference: `COD-EXP-${Date.now().toString().slice(-4)}`
+        })
+      });
 
-  if (!isUserLoggedIn) {
-    return (
-      <div style={{ fontSize: '0.78rem', color: 'var(--color-text-light)', marginTop: '8px', fontStyle: 'italic' }}>
-        🔑 <Link href="/auth" style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontWeight: 600 }}>Login</Link> to unlock 1-Click Express Checkout!
-      </div>
-    );
-  }
+      if (res.ok) {
+        const data = await res.json();
+        alert(`⚡ 1-Click Express Order Placed Successfully!\n\nOrder ID: ${data.order?.id || 'VBS-EXP-999'}\nProduct: "${product.title}"\nPrice: ₹${product.price}\nPayment Method: Pay on Delivery (COD)\nDelivery Address: Bhanwarkuan Hostels, Indore\n\nThank you for choosing Vidhya Express Checkout! ✓`);
+      } else {
+        alert('Express checkout failed. Please try standard checkout from Cart.');
+      }
+    } catch (err) {
+      console.error('Express checkout error:', err);
+      alert('Express checkout failed. Please try standard checkout from Cart.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <button
