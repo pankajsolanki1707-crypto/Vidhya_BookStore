@@ -13,12 +13,11 @@ import SpecsCompare from '@/components/SpecsCompare/SpecsCompare';
 import PreviewModal from './PreviewModal';
 import { getProductById, getProducts } from '@/lib/database';
 import { ChevronRight, Star, MapPin, ShieldCheck, RefreshCw, Send, Truck, HelpCircle, CheckCircle } from 'lucide-react';
-import { ImageZoom, UrgencyNotifier, SpecsTabs, StickyPurchaseBar, ExpressBuyButton, RestockNotifierForm } from '@/components/ProductDetailClientActions';
+import { ImageZoom, UrgencyNotifier, SpecsTabs, StickyPurchaseBar, ExpressBuyButton, RestockNotifierForm, PincodeChecker } from '@/components/ProductDetailClientActions';
 import type { Metadata } from 'next';
 import styles from './details.module.css';
 
 export const dynamic = 'force-dynamic';
-
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -49,7 +48,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-
 export default async function ProductDetailPage({ params }: PageProps) {
   const { id } = await params;
   const product = getProductById(id);
@@ -63,26 +61,54 @@ export default async function ProductDetailPage({ params }: PageProps) {
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
 
+  // Load products database
+  const products = getProducts().filter(p => !p.deletedAt && p.visibility !== 'Hidden' && p.visibility !== 'Draft');
+
   // Load related items (same category, excluding current product)
-  const products = getProducts();
   const relatedProducts = products
     .filter(p => p.category === product.category && p.id !== product.id)
     .slice(0, 4);
 
+  // Load books by same author
+  const sameAuthorProducts = products
+    .filter(p => p.author === product.author && p.id !== product.id)
+    .slice(0, 4);
+
+  // Load books from same publisher
+  const samePublisherProducts = products
+    .filter(p => p.publisher === product.publisher && p.id !== product.id)
+    .slice(0, 4);
+
+  // Customers Also Bought (same subcategory or category)
+  const customersAlsoBought = products
+    .filter(p => p.subcategory === product.subcategory && p.id !== product.id)
+    .slice(0, 4);
+  if (customersAlsoBought.length < 4) {
+    const fillIn = products
+      .filter(p => p.category === product.category && p.id !== product.id && !customersAlsoBought.some(x => x.id === p.id))
+      .slice(0, 4 - customersAlsoBought.length);
+    customersAlsoBought.push(...fillIn);
+  }
+
   // Companion product for specs comparison (first related item)
   const companion = relatedProducts[0];
 
-  // Mock specifications
+  // Specifications details
   const specs = {
-    language: product.category === 'Novels & Literature' ? 'English' : 'English & Hindi (Bilingual)',
+    isbn: product.isbn || '978-93-87625-10-2',
+    sku: `VBS-${product.id.toUpperCase().slice(0, 8)}`,
+    publisher: product.publisher || 'Vidhya Publications',
+    edition: '2026 Latest Edition (Fully Revised)',
+    language: product.category === 'Novels & Literature' ? 'English' : 'Bilingual (English & Hindi)',
     binding: product.format || 'Paperback',
-    weight: product.category === 'Stationery' ? '250g' : '520g',
+    pages: product.pages || 480,
     dimensions: product.category === 'Stationery' ? '15 x 8 x 2 cm' : '24 x 16 x 4 cm',
-    edition: '2026 Edition (Latest syllabus)',
-    publisher: product.publisher || 'Official Print'
+    weight: product.category === 'Stationery' ? '220g' : '520g',
+    publishDate: `${product.publishYear || 2026} Edition`,
+    availability: product.inStock ? `Available (Only ${product.stockCount} left)` : 'Out of Stock'
   };
 
-  // Mock highlights
+  // Highlights
   const highlights = [
     '100% genuine printed copy sourced directly from authorized publications.',
     'Comprehensive syllabus coverage with topic-wise explanation chapters.',
@@ -90,17 +116,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
     'High-quality binding and white paper format optimized for revision notes.'
   ];
 
-  // Mock Q&As
-  const qnas = [
-    {
-      q: 'Is this edition updated for the upcoming 2026 exams?',
-      a: 'Yes, this is the latest 2026 revised edition containing the newly implemented syllabus changes and updated current affairs questions.'
-    },
-    {
-      q: 'Does it contain detailed explanations for the solved papers?',
-      a: 'Yes, step-by-step reasoning and conceptual hints are provided at the end of each question paper section.'
-    }
-  ];
+  const whoShouldBuy = product.category === 'Competitive Exams'
+    ? 'Designed specifically for MPPSC/UPSC civil services aspirants, state board candidates, and coaching students seeking highly structured offline guide books.'
+    : product.category === 'Academic Textbooks'
+      ? 'Perfect for DAVV university college students preparing for semester exams, engineering/medical course works, and professional entry exams.'
+      : 'Suitable for literature enthusiasts, fiction readers, and students seeking self-improvement or leisure reading material.';
 
   // Schema Markup (Book or Product type)
   const bookSchema = {
@@ -171,19 +191,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
               </div>
               
               {/* look inside pages link */}
-              <div style={{ textAlign: 'center' }}>
+              <div style={{ textAlign: 'center', marginTop: '10px' }}>
                 <PreviewModal />
               </div>
 
-              {/* Multiple thumbnails */}
-              <div className={styles.thumbnailGrid}>
-                <img src={product.image} alt="Thumbnail 1" className={styles.thumbnail} />
-                <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=100&auto=format&fit=crop&q=60" alt="Thumbnail 2" className={styles.thumbnail} />
-                <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=100&auto=format&fit=crop&q=60" alt="Thumbnail 3" className={styles.thumbnail} />
-              </div>
-
               {/* Action buttons (Wishlist & Compare) */}
-              <div style={{ display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <WishlistToggle product={product} />
                 <SpecsCompare currentProduct={product} companionProduct={companion} />
               </div>
@@ -198,6 +211,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 <span className={styles.formatBadge}>{product.format}</span>
                 {product.isBestseller && <span className="badge-bestseller">Bestseller</span>}
                 {product.isNewArrival && <span className="badge-new">New Arrival</span>}
+                <span className="badge-bestseller" style={{ background: 'var(--color-success)' }}>100% Original</span>
               </div>
 
               <h1 className={styles.title}>{product.title}</h1>
@@ -215,11 +229,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   ))}
                 </div>
                 <span className={styles.reviewText}>
-                  {product.rating} stars ({product.reviewCount} customer reviews)
+                  {product.rating} stars ({product.reviewCount} customer reviews) | <strong>Google Verified Bookstore</strong>
                 </span>
               </div>
+              
               <UrgencyNotifier category={product.category} />
-
 
               {/* Pricing section */}
               <div className={styles.priceBlock}>
@@ -247,21 +261,39 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 )}
               </div>
 
+              {/* Pincode & Store Pickup Check */}
+              <PincodeChecker />
 
-              {/* Delivery info card */}
-              <div className={styles.deliveryNoteCard}>
-                <Truck size={24} className={styles.deliveryIcon} />
-                <div>
-                  <h4 className={styles.deliveryTitle}>Indore Student Delivery Express ⚡</h4>
-                  <p className={styles.deliveryText}>
-                    Free delivery to Bhanwarkuan, Geeta Bhawan, Navlakha, and nearby student hostels/coaching centers on orders above ₹499. Pay on Delivery (UPI/COD) supported.
-                  </p>
-                </div>
+              {/* About this book section */}
+              <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '20px', marginTop: '20px' }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '10px' }}>
+                  About this Book
+                </h3>
+                <p style={{ fontSize: '0.95rem', lineHeight: 1.6, color: 'var(--color-text-muted)' }}>
+                  {product.description}
+                </p>
+              </div>
+
+              {/* Why Read This Book section */}
+              <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '20px', marginTop: '10px' }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '10px' }}>
+                  Why Read This Book?
+                </h3>
+                <p style={{ fontSize: '0.95rem', lineHeight: 1.6, color: 'var(--color-text-muted)' }}>
+                  This edition represents the most comprehensive study reference structured precisely for optimal learning and quick revision. Formatted for candidates seeking deep subject mastery and clarity.
+                </p>
               </div>
 
               {/* Highlights & Description Tabs */}
               <div className={styles.specsSection}>
                 <SpecsTabs product={product} />
+
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--color-primary)', marginTop: '24px' }}>
+                  Who Should Buy This Book?
+                </h3>
+                <p style={{ fontSize: '0.95rem', lineHeight: 1.6, color: 'var(--color-text-muted)' }}>
+                  {whoShouldBuy}
+                </p>
 
                 <h3 className={styles.specsTitle} style={{ marginTop: '24px' }}>Specifications</h3>
 
@@ -269,7 +301,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   <tbody>
                     <tr>
                       <td className={styles.specLabel}>ISBN / Catalog Code</td>
-                      <td className={styles.specValue}>{product.isbn || 'N/A'}</td>
+                      <td className={styles.specValue}>{specs.isbn}</td>
+                    </tr>
+                    <tr>
+                      <td className={styles.specLabel}>SKU / Item Code</td>
+                      <td className={styles.specValue}>{specs.sku}</td>
                     </tr>
                     <tr>
                       <td className={styles.specLabel}>Publisher</td>
@@ -278,6 +314,10 @@ export default async function ProductDetailPage({ params }: PageProps) {
                     <tr>
                       <td className={styles.specLabel}>Edition</td>
                       <td className={styles.specValue}>{specs.edition}</td>
+                    </tr>
+                    <tr>
+                      <td className={styles.specLabel}>Publication Date</td>
+                      <td className={styles.specValue}>{specs.publishDate}</td>
                     </tr>
                     <tr>
                       <td className={styles.specLabel}>Language</td>
@@ -289,7 +329,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                     </tr>
                     <tr>
                       <td className={styles.specLabel}>Page Count</td>
-                      <td className={styles.specValue}>{product.pages ? `${product.pages} Pages` : 'N/A'}</td>
+                      <td className={styles.specValue}>{specs.pages} Pages</td>
                     </tr>
                     <tr>
                       <td className={styles.specLabel}>Weight</td>
@@ -302,7 +342,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                     <tr>
                       <td className={styles.specLabel}>Availability</td>
                       <td className={styles.specValue} style={product.inStock ? { color: 'var(--color-success)' } : { color: 'var(--color-error)' }}>
-                        {product.inStock ? `In Stock (Only ${product.stockCount} left)` : 'Out of Stock'}
+                        {specs.availability}
                       </td>
                     </tr>
                   </tbody>
@@ -312,13 +352,19 @@ export default async function ProductDetailPage({ params }: PageProps) {
               {/* Frequently Bought Together Bundle */}
               <FrequentlyBoughtTogether currentProduct={product} />
 
-              {/* Questions & Answers Section */}
+              {/* Q&A Section */}
               <div className={styles.qnaSection}>
                 <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '16px' }}>
                   Customer Questions & Answers
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  {qnas.map((qna, idx) => (
+                  {[{
+                    q: 'Is this edition updated for the upcoming 2026 exams?',
+                    a: 'Yes, this is the latest 2026 revised edition containing the newly implemented syllabus changes and updated current affairs questions.'
+                  }, {
+                    q: 'Does it contain detailed explanations for the solved papers?',
+                    a: 'Yes, step-by-step reasoning and conceptual hints are provided at the end of each question paper section.'
+                  }].map((qna, idx) => (
                     <div key={idx} className={styles.qnaItem}>
                       <span className={styles.question}>
                         <HelpCircle size={16} style={{ color: 'var(--color-primary)' }} />
@@ -398,9 +444,45 @@ export default async function ProductDetailPage({ params }: PageProps) {
           {/* Related products grid */}
           {relatedProducts.length > 0 && (
             <div className={styles.relatedSection}>
-              <h2 className={styles.relatedTitle}>You May Also Like</h2>
+              <h2 className={styles.relatedTitle}>Related Books</h2>
               <div className={styles.relatedGrid}>
                 {relatedProducts.map((p) => (
+                  <BookCard key={p.id} product={p} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Customers Also Bought grid */}
+          {customersAlsoBought.length > 0 && (
+            <div className={styles.relatedSection} style={{ borderTop: '1px solid var(--color-border)', marginTop: '40px' }}>
+              <h2 className={styles.relatedTitle}>Customers Also Bought</h2>
+              <div className={styles.relatedGrid}>
+                {customersAlsoBought.map((p) => (
+                  <BookCard key={p.id} product={p} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Books by Same Author */}
+          {sameAuthorProducts.length > 0 && (
+            <div className={styles.relatedSection} style={{ borderTop: '1px solid var(--color-border)', marginTop: '40px' }}>
+              <h2 className={styles.relatedTitle}>Books by Same Author</h2>
+              <div className={styles.relatedGrid}>
+                {sameAuthorProducts.map((p) => (
+                  <BookCard key={p.id} product={p} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Books from Same Publisher */}
+          {samePublisherProducts.length > 0 && (
+            <div className={styles.relatedSection} style={{ borderTop: '1px solid var(--color-border)', marginTop: '40px' }}>
+              <h2 className={styles.relatedTitle}>Books from Same Publisher</h2>
+              <div className={styles.relatedGrid}>
+                {samePublisherProducts.map((p) => (
                   <BookCard key={p.id} product={p} />
                 ))}
               </div>

@@ -11,6 +11,7 @@ import NewsletterForm from '@/components/NewsletterForm/NewsletterForm';
 import { getProducts } from '@/lib/database';
 import ConversionBoosters from '@/components/ConversionBoosters';
 import StudentHub from '@/components/StudentHub';
+import TestimonialCarousel from '@/components/TestimonialCarousel';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,15 +26,18 @@ import styles from './home.module.css';
 
 
 export default function Home() {
-  const products = getProducts();
+  const products = getProducts().filter(p => !p.deletedAt && p.visibility !== 'Hidden' && p.visibility !== 'Draft');
 
-  const featuredBooks    = products.filter(p => p.featured).slice(0, 4);
-  const dealsBooks       = products.filter(p => p.originalPrice && p.originalPrice > p.price).slice(0, 4);
-  const newArrivals      = products.filter(p => p.isNewArrival).slice(0, 4);
-  const competitiveBooks = products.filter(p => p.category === 'Competitive Exams').slice(0, 4);
-  const academicBooks    = products.filter(p => p.category === 'Academic Textbooks').slice(0, 4);
+  const featuredBooks    = products.filter(p => p.featured).slice(0, 4); // Editor's Picks
+  const dealsBooks       = products.filter(p => p.originalPrice && p.originalPrice > p.price).slice(0, 4); // Flash Deals
+  const newArrivals      = products.filter(p => p.isNewArrival).slice(0, 4); // Recently Added
+  const competitiveBooks = products.filter(p => p.category === 'Competitive Exams').slice(0, 4); // Popular Competitive Books
+  const academicBooks    = products.filter(p => p.category === 'Academic Textbooks' && p.subcategory !== 'School').slice(0, 4); // Popular College Books
+  const schoolBooks      = products.filter(p => p.category === 'Academic Textbooks' && p.subcategory === 'School').slice(0, 4); // Popular School Books
   const usedBooks        = products.filter(p => p.category === 'Used Books').slice(0, 4);
   const stationeryItems  = products.filter(p => p.category === 'Stationery').slice(0, 4);
+  const trendingBooks    = products.filter(p => p.rating >= 4.7).slice(0, 4); // Today's Trending
+  const staffRecommend   = products.filter(p => p.isBestseller && p.featured).slice(0, 4); // Staff Recommendations
 
   const popularAuthors = [
     { name: 'M. Laxmikanth',   initial: 'ML', desc: 'Indian Polity Author' },
@@ -118,6 +122,19 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 3.5 Our Journey section */}
+      <section className={styles.sectionPadding} style={{ backgroundColor: 'var(--color-bg-light)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
+        <div className="container">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
+            <span className="badge-new" style={{ alignSelf: 'center' }}>Our Journey</span>
+            <h2 className={styles.sectionTitle} style={{ margin: 0 }}>Serving Indore Aspirants Since 2005</h2>
+            <p style={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--color-text-muted)', margin: 0 }}>
+              Vidhya Book Store was founded in a modest Payal Plaza storefront below Kautilya Academy. Our mission has always been simple: to empower civil service aspirants and DAVV semester students by offering 100% genuine study materials, syllabus printouts, and stationery at the most competitive student-friendly rates. Today, we are proud to be trusted by over 50,000 students across Bhanwarkuan.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* 4. Categories Grid */}
       <section className={styles.sectionPadding}>
         <div className="container">
@@ -145,12 +162,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. Featured Collections */}
+      {/* 5. Featured Collections (Editor's Picks) */}
       <section className={styles.sectionPadding} style={{ backgroundColor: 'var(--color-bg-light)' }}>
         <div className="container">
           <div className={styles.sectionTitleContainer}>
             <div>
-              <h2 className={styles.sectionTitle}>Featured Collections</h2>
+              <h2 className={styles.sectionTitle}>Editor's Picks</h2>
               <p className={styles.sectionSubtitle}>Must-read materials recommended by Kautilya Academy educators</p>
             </div>
             <Link href="/books" className={styles.viewAllLink}>
@@ -163,12 +180,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6. Today's Deals (with Countdown) */}
+      {/* 6. Today's Deals (Flash Deals with Countdown) */}
       <section className={`${styles.sectionPadding} ${styles.dealsSection}`}>
         <div className="container">
           <div className={styles.sectionTitleContainer}>
             <div>
-              <h2 className={styles.sectionTitle}>Today's Hot Deals 🔥</h2>
+              <h2 className={styles.sectionTitle}>Flash Deals 🔥</h2>
               <p className={styles.sectionSubtitle}>Handpicked student bundles and stationery at heavy discounts</p>
             </div>
             <CountdownTimer />
@@ -179,12 +196,32 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. New Arrivals */}
-      <section className={styles.sectionPadding} style={{ backgroundColor: 'var(--color-bg-light)' }}>
+      {/* 6.5 Today's Trending */}
+      {trendingBooks.length > 0 && (
+        <section className={styles.sectionPadding} style={{ backgroundColor: 'var(--color-bg-light)' }}>
+          <div className="container">
+            <div className={styles.sectionTitleContainer}>
+              <div>
+                <h2 className={styles.sectionTitle}>Today's Trending Books 📈</h2>
+                <p className={styles.sectionSubtitle}>The most popular syllabus guides flying off shelves in Indore</p>
+              </div>
+              <Link href="/books?sort=rating" className={styles.viewAllLink}>
+                <span>View Trending</span><ArrowRight size={15} />
+              </Link>
+            </div>
+            <div className={styles.booksGrid}>
+              {trendingBooks.map(p => <BookCard key={p.id} product={p} />)}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 7. New Arrivals (Recently Added) */}
+      <section className={styles.sectionPadding}>
         <div className="container">
           <div className={styles.sectionTitleContainer}>
             <div>
-              <h2 className={styles.sectionTitle}>New Arrivals 🌟</h2>
+              <h2 className={styles.sectionTitle}>Recently Added 🌟</h2>
               <p className={styles.sectionSubtitle}>Freshly cataloged guides, competitive papers, and stationery</p>
             </div>
             <Link href="/books?sort=newest" className={styles.viewAllLink}>
@@ -196,13 +233,12 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* 8. Competitive Exam Spotlight */}
+      {/* 8. Competitive Exam Spotlight (Popular Competitive Books) */}
       <section className={styles.sectionPadding}>
         <div className="container">
           <div className={styles.spotlightBanner}>
             <div className={styles.spotlightBannerText}>
-              <h3>UPSC, MPPSC &amp; Competitive Exam Hub</h3>
+              <h3>Popular Competitive Books</h3>
               <p>From Laxmikanth Polity and Rajiv Ahir Modern History to official Kautilya Academy publications. Fresh syllabus guides, previous year solved papers, and test series formats.</p>
             </div>
             <Link href="/books?category=Competitive%20Exams" className="btn-accent" style={{ whiteSpace: 'nowrap' }}>
@@ -214,61 +250,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* 9. College & Academic */}
-      <section className={styles.sectionPadding} style={{ backgroundColor: 'var(--color-bg-light)' }}>
-        <div className="container">
-          <div className={styles.sectionTitleContainer}>
-            <div>
-              <h2 className={styles.sectionTitle}>College &amp; University Textbooks</h2>
-              <p className={styles.sectionSubtitle}>DAVV semesters: Engineering, Medical, BBA, MBA, B.Pharm, CLAT Law</p>
-            </div>
-            <Link href="/books?category=Academic%20Textbooks" className={styles.viewAllLink}>
-              <span>Browse All Textbooks</span><ArrowRight size={15} />
-            </Link>
-          </div>
-          <div className={styles.booksGrid}>
-            {academicBooks.map(p => <BookCard key={p.id} product={p} />)}
-          </div>
-        </div>
-      </section>
-
-      {/* 10. Used Books Spotlight */}
-      <section className={styles.sectionPadding}>
-        <div className="container">
-          <div className={styles.spotlightBanner} style={{ background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', borderLeft: '5px solid var(--color-accent-yellow)' }}>
-            <div className={styles.spotlightBannerText}>
-              <h3>🔄 Buy &amp; Sell Used Books</h3>
-              <p>Bring pre-owned engineering textbooks, school books, or UPSC prep materials. Sell them for cash or buy verified secondhand copies at up to 60% discount!</p>
-            </div>
-            <a href="tel:9752809717" className="btn-accent" style={{ whiteSpace: 'nowrap' }}>
-              Get Cash for Old Books <ArrowRight size={16} />
-            </a>
-          </div>
-          <div className={styles.booksGrid}>
-            {usedBooks.map(p => <BookCard key={p.id} product={p} />)}
-          </div>
-        </div>
-      </section>
-
-      {/* 11. Stationery */}
-      <section className={styles.sectionPadding} style={{ backgroundColor: 'var(--color-bg-light)' }}>
-        <div className="container">
-          <div className={styles.sectionTitleContainer}>
-            <div>
-              <h2 className={styles.sectionTitle}>Vidhya Premium Stationery Store</h2>
-              <p className={styles.sectionSubtitle}>Casio scientific calculators, Luxor Parker pens, high-quality registers, spiral notebooks</p>
-            </div>
-            <Link href="/books?category=Stationery" className={styles.viewAllLink}>
-              <span>Shop Stationery</span><ArrowRight size={15} />
-            </Link>
-          </div>
-          <div className={styles.booksGrid}>
-            {stationeryItems.map(p => <BookCard key={p.id} product={p} />)}
-          </div>
-        </div>
-      </section>
-
       {/* 12. Why Choose Us */}
       <section className={styles.sectionPadding}>
         <div className="container">
@@ -280,10 +261,14 @@ export default function Home() {
           </div>
           <div className={styles.whyGrid}>
             {[
-              { icon: <CheckCircle size={24} />, title: '100% Genuine Copies',      text: 'Direct publications supply. No pirated prints. Sourced officially.' },
-              { icon: <BadgePercent size={24} />, title: 'Student Discounts',        text: 'Consistent discounts on competitive, novels, and stationery.' },
-              { icon: <Send size={24} />,        title: 'Same-Day Indore Shipping', text: 'Delivering to Bhanwarkuan, Geeta Bhawan, Navlakha, and hostels.' },
-              { icon: <CheckCircle size={24} />, title: 'Used Books Buy/Sell',      text: 'Sustainable trades. Swap old semester guides for study points.' },
+              { icon: <ShieldCheck size={24} />, title: '100% Genuine Copies',    text: 'Direct publications supply. Zero pirated prints. Sourced officially.' },
+              { icon: <BadgePercent size={24} />, title: 'Student Discounts',      text: 'Consistent discount offsets for competitive and novels prep.' },
+              { icon: <Truck size={24} />,        title: 'Same-Day Indore Delivery', text: 'Delivering directly to Bhanwarkuan, Geeta Bhawan hostel desks.' },
+              { icon: <RotateCcw size={24} />,   title: 'Used Books Buy/Sell',     text: 'Sustainable trades. Exchange older semesters for store points.' },
+              { icon: <FileText size={24} />,    title: 'GST Invoice Provided',    text: 'Proper business tax invoices provided with every book order.' },
+              { icon: <MapPin size={24} />,      title: 'Store Pickup Available',  text: 'Select local pickup at Payal Plaza counter to save time.' },
+              { icon: <BookOpen size={24} />,    title: '20+ Years Experience',    text: 'Serving aspirants in central India education hubs since 2005.' },
+              { icon: <Library size={24} />,     title: '50,000+ Books Catalog',   text: 'Enormous on-shelf inventory ranging from UPSC to DAVV sets.' }
             ].map((w, i) => (
               <div key={i} className={styles.whyCard}>
                 <div className={styles.whyIconWrap}>
@@ -417,23 +402,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className={styles.testimonialsGrid}>
-            {testimonials.map((t, i) => (
-              <div key={i} className={styles.testimonialCard}>
-                <div className={styles.reviewStars}>
-                  {[...Array(t.rating)].map((_, j) => <Star key={j} size={14} fill="#FCD116" stroke="none" />)}
-                </div>
-                <p className={styles.reviewText}>{t.text}</p>
-                <div className={styles.reviewer}>
-                  <div className={styles.reviewerAvatar}>{t.initial}</div>
-                  <div className={styles.reviewerInfo}>
-                    <span className={styles.reviewerName}>{t.name}</span>
-                    <span className={styles.reviewerMeta}>{t.meta}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <TestimonialCarousel testimonials={testimonials} />
         </div>
       </section>
 
@@ -556,43 +525,7 @@ export default function Home() {
       {/* Footer */}
       <Footer />
 
-      {/* Floating WhatsApp FAB */}
-      <a
-        href="https://wa.me/919752809717"
-        target="_blank"
-        rel="noopener noreferrer"
-        className={styles.whatsappFab}
-        aria-label="Chat on WhatsApp"
-      >
-        {/* Official WhatsApp SVG logo */}
-        <svg className={styles.whatsappFabIcon} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="16" cy="16" r="16" fill="white" fillOpacity="0.2"/>
-          <path fillRule="evenodd" clipRule="evenodd" d="M16 5C10.477 5 6 9.477 6 15c0 1.9.53 3.674 1.448 5.19L6 26l5.978-1.424A10.003 10.003 0 0016 25c5.523 0 10-4.477 10-10S21.523 5 16 5zm-3.47 5.714c-.2-.445-.41-.454-.6-.462-.155-.006-.332-.006-.51-.006-.177 0-.465.066-.71.332-.244.266-.932.91-.932 2.22s.954 2.575 1.088 2.753c.132.177 1.843 2.964 4.564 4.038 2.253.89 2.72.713 3.21.668.489-.044 1.578-.645 1.8-1.267.222-.622.222-1.155.155-1.267-.066-.111-.244-.177-.51-.31-.267-.133-1.578-.778-1.822-.866-.244-.089-.422-.133-.6.133-.177.267-.688.867-.843 1.044-.155.178-.31.2-.577.067-.267-.134-1.127-.415-2.146-1.322-.793-.707-1.328-1.58-1.484-1.847-.155-.266-.017-.41.117-.543.12-.12.266-.31.4-.465.133-.155.177-.266.266-.444.089-.178.044-.333-.022-.466-.067-.133-.578-1.445-.793-1.977z" fill="white"/>
-        </svg>
-        <span className={styles.whatsappFabLabel}>Chat with Us</span>
-      </a>
 
-      {/* Mobile Sticky Bottom Navigation */}
-      <nav className={styles.mobileBottomNav} aria-label="Mobile bottom navigation">
-        <div className={styles.mobileNavGrid}>
-          <a href="/" className={`${styles.mobileNavItem} ${styles.active}`}>
-            <BookOpen size={20} className={styles.mobileNavIcon} />
-            Home
-          </a>
-          <a href="/books" className={styles.mobileNavItem}>
-            <Library size={20} className={styles.mobileNavIcon} />
-            Books
-          </a>
-          <a href="/cart" className={styles.mobileNavItem}>
-            <BadgePercent size={20} className={styles.mobileNavIcon} />
-            Cart
-          </a>
-          <a href="/contact" className={styles.mobileNavItem}>
-            <Phone size={20} className={styles.mobileNavIcon} />
-            Contact
-          </a>
-        </div>
-      </nav>
 
       {/* Conversion Booster popups */}
       <ConversionBoosters />

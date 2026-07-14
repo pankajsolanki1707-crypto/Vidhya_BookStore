@@ -161,20 +161,18 @@ export function sanitizeInput(input: string): string {
     .replace(/\//g, '&#x2F;');
 }
 
-/**
- * Image URL Validation helper to block remote execution threats
- */
 export function validateImageUrl(url: string): boolean {
   if (!url) return false;
   try {
     const parsed = new URL(url);
-    // Allow unsplash and local image domains
+    // Allow unsplash, local image, and uploads folders
     return (
       parsed.protocol === 'https:' ||
-      parsed.pathname.startsWith('/images/')
+      parsed.pathname.startsWith('/images/') ||
+      parsed.pathname.startsWith('/uploads/')
     );
   } catch {
-    return url.startsWith('/images/');
+    return url.startsWith('/images/') || url.startsWith('/uploads/');
   }
 }
 

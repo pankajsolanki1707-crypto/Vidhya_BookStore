@@ -5,12 +5,11 @@ import { verifyToken, sanitizeInput, validateImageUrl } from '@/lib/security';
 export const dynamic = 'force-dynamic';
 
 
-function isAdminAuthorized(req: NextRequest): boolean {
-  const authHeader = req.headers.get('Authorization') || req.headers.get('x-admin-password');
-  if (!authHeader) return false;
+import { verifyRolePermission } from '@/lib/rbac';
 
-  const payload = verifyToken(authHeader);
-  return payload !== null && payload.role === 'admin';
+function isAdminAuthorized(req: NextRequest): boolean {
+  const authHeader = req.headers.get('Authorization');
+  return verifyRolePermission(authHeader, 'action_inventory_write');
 }
 
 export async function GET(
@@ -19,7 +18,10 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const product = getProductById(id);
+    const authHeader = req.headers.get('Authorization');
+    const isAuthorized = verifyRolePermission(authHeader, 'tab_inventory');
+
+    const product = getProductById(id, isAuthorized);
     if (!product) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }

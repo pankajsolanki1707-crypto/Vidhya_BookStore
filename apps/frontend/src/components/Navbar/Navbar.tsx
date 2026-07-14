@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
-import { Search, ShoppingBag, Menu, X, BookOpen, Send, PhoneCall, GitCompare, Trash2 } from 'lucide-react';
+import { Search, ShoppingBag, Menu, X, BookOpen, Send, PhoneCall, GitCompare, Trash2, Mic, MicOff } from 'lucide-react';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
@@ -15,6 +15,8 @@ export default function Navbar() {
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
   
   const [activeIndex, setActiveIndex] = useState(-1);
   const [compareItems, setCompareItems] = useState<any[]>([]);
@@ -56,6 +58,18 @@ export default function Navbar() {
     return () => window.removeEventListener('vbs_compare_changed', loadCompare);
   }, []);
 
+  // Load history on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('vbs_search_history');
+      if (stored) {
+        setSearchHistory(JSON.parse(stored));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
   const handleRemoveCompareItem = (id: string) => {
     const updated = compareItems.filter(item => item.id !== id);
     setCompareItems(updated);
@@ -91,7 +105,7 @@ export default function Navbar() {
       } finally {
         setIsSearching(false);
       }
-    }, 300);
+    }, 250);
 
     return () => clearTimeout(delayDebounce);
   }, [searchQuery]);
@@ -107,9 +121,22 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const saveToHistory = (searchTerm: string) => {
+    if (!searchTerm.trim()) return;
+    const cleanTerm = searchTerm.trim();
+    const updated = [cleanTerm, ...searchHistory.filter(h => h !== cleanTerm)].slice(0, 5);
+    setSearchHistory(updated);
+    try {
+      localStorage.setItem('vbs_search_history', JSON.stringify(updated));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
+      saveToHistory(searchQuery);
       router.push(`/books?query=${encodeURIComponent(searchQuery)}`);
       setShowSuggestions(false);
     }
@@ -122,15 +149,18 @@ export default function Navbar() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!showSuggestions || suggestions.length === 0) return;
+    if (!showSuggestions) return;
+    const totalItems = suggestions.length;
+    if (totalItems === 0) return;
+
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setActiveIndex(prev => (prev < suggestions.length - 1 ? prev + 1 : 0));
+      setActiveIndex(prev => (prev < totalItems - 1 ? prev + 1 : 0));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setActiveIndex(prev => (prev > 0 ? prev - 1 : suggestions.length - 1));
+      setActiveIndex(prev => (prev > 0 ? prev - 1 : totalItems - 1));
     } else if (e.key === 'Enter') {
-      if (activeIndex >= 0 && activeIndex < suggestions.length) {
+      if (activeIndex >= 0 && activeIndex < totalItems) {
         e.preventDefault();
         const selected = suggestions[activeIndex];
         router.push(`/books/${selected.id}`);
@@ -140,6 +170,46 @@ export default function Navbar() {
     } else if (e.key === 'Escape') {
       setShowSuggestions(false);
     }
+  };
+
+  const startVoiceSearch = () => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Voice search is not supported in this browser. Please use Chrome, Safari or Edge.");
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-IN';
+    recognition.start();
+    setIsListening(true);
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setSearchQuery(transcript);
+      setIsListening(false);
+      saveToHistory(transcript);
+      router.push(`/books?query=${encodeURIComponent(transcript)}`);
+      setShowSuggestions(false);
+    };
+    recognition.onerror = () => {
+      setIsListening(false);
+    };
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+  };
+
+  const highlightMatch = (text: string, query: string) => {
+    if (!query) return text;
+    const parts = text.split(new RegExp(`(${query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi'));
+    return (
+      <span>
+        {parts.map((part, i) => 
+          part.toLowerCase() === query.toLowerCase() 
+            ? <mark key={i} style={{ backgroundColor: '#FCD116', color: 'inherit', padding: '0 2px', borderRadius: '2px', fontWeight: 'bold' }}>{part}</mark> 
+            : part
+        )}
+      </span>
+    );
   };
 
   return (
@@ -178,7 +248,7 @@ export default function Navbar() {
 
             {/* Live Search Bar */}
             <div className={styles.searchContainer} ref={searchRef}>
-              <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
+              <form onSubmit={handleSearchSubmit} className={styles.searchForm} style={{ display: 'flex', alignItems: 'center', width: '100%', position: 'relative' }}>
                 <input
                   type="text"
                   placeholder="Search competitive exams, author, stationery, UPSC..."
@@ -190,19 +260,160 @@ export default function Navbar() {
                   onFocus={() => setShowSuggestions(true)}
                   onKeyDown={handleKeyDown}
                   className={styles.searchInput}
+                  style={{ flex: 1, paddingRight: '75px' }}
                 />
+                
+                {/* Voice Search Button */}
+                <button
+                  type="button"
+                  onClick={startVoiceSearch}
+                  style={{
+                    position: 'absolute',
+                    right: '48px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: isListening ? 'var(--color-error)' : 'var(--color-text-muted)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '8px'
+                  }}
+                  title="Voice Search"
+                >
+                  {isListening ? <MicOff size={16} style={{ color: 'var(--color-error)' }} /> : <Mic size={16} />}
+                </button>
+
                 <button type="submit" className={styles.searchBtn}>
                   <Search size={18} />
                 </button>
               </form>
 
               {/* Suggestions Dropdown */}
-              {showSuggestions && (searchQuery.trim() !== '') && (
+              {showSuggestions && (
                 <div className={styles.suggestionsDropdown}>
-                  {isSearching ? (
+                  {searchQuery.trim() === '' ? (
+                    <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      {searchHistory.length > 0 && (
+                        <div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-muted)' }}>Recent Searches</span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSearchHistory([]);
+                                localStorage.removeItem('vbs_search_history');
+                              }}
+                              style={{ fontSize: '0.75rem', color: 'var(--color-error)', background: 'none', border: 'none', cursor: 'pointer' }}
+                            >
+                              Clear All
+                            </button>
+                          </div>
+                          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                            {searchHistory.map((h, i) => (
+                              <button
+                                key={i}
+                                type="button"
+                                onClick={() => {
+                                  setSearchQuery(h);
+                                  router.push(`/books?query=${encodeURIComponent(h)}`);
+                                  setShowSuggestions(false);
+                                }}
+                                style={{
+                                  fontSize: '0.78rem',
+                                  padding: '5px 12px',
+                                  border: '1px solid var(--color-border)',
+                                  borderRadius: 'var(--radius-full)',
+                                  backgroundColor: 'var(--color-bg-light)',
+                                  cursor: 'pointer',
+                                  color: 'var(--color-text-main)'
+                                }}
+                              >
+                                {h}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      <div>
+                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-muted)', display: 'block', marginBottom: '8px' }}>Trending &amp; Popular Searches</span>
+                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                          {[
+                            { label: '🦁 MPPSC Prep', query: 'MPPSC' },
+                            { label: '🏛️ UPSC Polity', query: 'Polity' },
+                            { label: '🧮 Casio Calculator', query: 'Casio' },
+                            { label: '📚 Novels', query: 'Novel' },
+                            { label: '🔄 Used Books', query: 'Used' }
+                          ].map((t, idx) => (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => {
+                                setSearchQuery(t.query);
+                                router.push(`/books?query=${encodeURIComponent(t.query)}`);
+                                setShowSuggestions(false);
+                              }}
+                              style={{
+                                fontSize: '0.78rem',
+                                padding: '5px 12px',
+                                border: '1px solid var(--color-border)',
+                                borderRadius: 'var(--radius-full)',
+                                backgroundColor: 'var(--color-bg-light)',
+                                cursor: 'pointer',
+                                color: 'var(--color-text-main)'
+                              }}
+                            >
+                              {t.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : isSearching ? (
                     <div className={styles.searchState}>Searching catalog...</div>
                   ) : suggestions.length > 0 ? (
                     <>
+                      {/* matching attributes category, author */}
+                      {(() => {
+                        const matchedCats = Array.from(new Set(suggestions.map(s => s.category).filter(c => c.toLowerCase().includes(searchQuery.toLowerCase()))));
+                        const matchedAuths = Array.from(new Set(suggestions.map(s => s.author).filter(a => a.toLowerCase().includes(searchQuery.toLowerCase()))));
+                        if (matchedCats.length === 0 && matchedAuths.length === 0) return null;
+                        return (
+                          <div style={{ padding: '8px 16px', borderBottom: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column', gap: '6px', backgroundColor: 'var(--color-bg-light)' }}>
+                            {matchedCats.map(cat => (
+                              <div
+                                key={cat}
+                                onClick={() => {
+                                  router.push(`/books?category=${encodeURIComponent(cat)}`);
+                                  setSearchQuery('');
+                                  setShowSuggestions(false);
+                                }}
+                                style={{ fontSize: '0.8rem', cursor: 'pointer', color: 'var(--color-primary)', fontWeight: 600 }}
+                              >
+                                Filter by Category: <strong>{cat}</strong>
+                              </div>
+                            ))}
+                            {matchedAuths.map(auth => (
+                              <div
+                                key={auth}
+                                onClick={() => {
+                                  router.push(`/books?query=${encodeURIComponent(auth)}`);
+                                  setSearchQuery('');
+                                  setShowSuggestions(false);
+                                }}
+                                style={{ fontSize: '0.8rem', cursor: 'pointer', color: 'var(--color-primary)', fontWeight: 600 }}
+                              >
+                                Books by Author: <strong>{auth}</strong>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      })()}
+
                       <div className={styles.suggestionList}>
                         {suggestions.map((book, idx) => (
                           <div
@@ -215,9 +426,9 @@ export default function Navbar() {
                           >
                             <img src={book.image} alt={book.title} className={styles.suggestionThumb} />
                             <div className={styles.suggestionInfo}>
-                              <h4 className={styles.suggestionTitle}>{book.title}</h4>
+                              <h4 className={styles.suggestionTitle}>{highlightMatch(book.title, searchQuery)}</h4>
                               <p className={styles.suggestionMeta}>
-                                By {book.author} | <span className={styles.suggestionCat}>{book.category}</span>
+                                By {highlightMatch(book.author, searchQuery)} | <span className={styles.suggestionCat}>{book.category}</span>
                               </p>
                               <span className={styles.suggestionPrice}>₹{book.price}</span>
                             </div>
@@ -226,7 +437,10 @@ export default function Navbar() {
                       </div>
                       <Link 
                         href={`/books?query=${encodeURIComponent(searchQuery)}`}
-                        onClick={() => setShowSuggestions(false)}
+                        onClick={() => {
+                          saveToHistory(searchQuery);
+                          setShowSuggestions(false);
+                        }}
                         className={styles.viewAllSuggestions}
                       >
                         View all search results

@@ -5,13 +5,12 @@ import {
   sanitizeInput, checkFraudAlert, writeAuditLog 
 } from '@/lib/security';
 
+import { verifyRolePermission } from '@/lib/rbac';
+
 // Verify if request has a valid Admin JWT token
 function isAdminAuthorized(req: NextRequest): boolean {
-  const authHeader = req.headers.get('Authorization') || req.headers.get('x-admin-password');
-  if (!authHeader) return false;
-
-  const payload = verifyToken(authHeader);
-  return payload !== null && payload.role === 'admin';
+  const authHeader = req.headers.get('Authorization');
+  return verifyRolePermission(authHeader, 'tab_orders');
 }
 
 export async function GET(req: NextRequest) {

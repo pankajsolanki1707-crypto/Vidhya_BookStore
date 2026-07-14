@@ -20,7 +20,10 @@
     "publishYear": 2026,
     "featured": true,
     "isBestseller": true,
-    "isNewArrival": false
+    "isNewArrival": false,
+    "deletedAt": "2026-07-14T11:05:57.136Z",
+    "status": "Hidden",
+    "visibility": "Hidden"
   },
   {
     "id": "mppsc-gk-mahaveer",
@@ -43,7 +46,10 @@
     "publishYear": 2025,
     "featured": true,
     "isBestseller": true,
-    "isNewArrival": false
+    "isNewArrival": false,
+    "deletedAt": "2026-07-14T11:06:06.324Z",
+    "status": "Hidden",
+    "visibility": "Hidden"
   },
   {
     "id": "upsc-polity-laxmikanth",
@@ -66,7 +72,10 @@
     "publishYear": 2024,
     "featured": true,
     "isBestseller": true,
-    "isNewArrival": false
+    "isNewArrival": false,
+    "deletedAt": "2026-07-14T11:06:10.008Z",
+    "status": "Hidden",
+    "visibility": "Hidden"
   },
   {
     "id": "upsc-history-spectrum",
@@ -89,7 +98,10 @@
     "publishYear": 2026,
     "featured": false,
     "isBestseller": true,
-    "isNewArrival": true
+    "isNewArrival": true,
+    "deletedAt": "2026-07-14T11:09:24.370Z",
+    "status": "Hidden",
+    "visibility": "Hidden"
   },
   {
     "id": "quantitative-aptitude-rs-aggarwal",
@@ -135,7 +147,10 @@
     "publishYear": 2018,
     "featured": true,
     "isBestseller": true,
-    "isNewArrival": false
+    "isNewArrival": false,
+    "deletedAt": "2026-07-14T11:06:19.745Z",
+    "status": "Hidden",
+    "visibility": "Hidden"
   },
   {
     "id": "psychology-of-money-housel",
@@ -780,5 +795,31 @@
     "featured": true,
     "isBestseller": true,
     "isNewArrival": false
+  },
+  {
+    "id": "action-vs-motion-927",
+    "title": "action vs motion",
+    "author": "pankaj kumar",
+    "publisher": "self",
+    "price": 299,
+    "originalPrice": 399,
+    "category": "Novels & Literature",
+    "subcategory": "",
+    "format": "Paperback",
+    "image": "/uploads/img-1784028378811-30914.webp",
+    "description": "book about action",
+    "stockCount": 15,
+    "inStock": true,
+    "isbn": "1234567890123",
+    "pages": 0,
+    "publishYear": 2026,
+    "featured": true,
+    "isBestseller": true,
+    "isNewArrival": false,
+    "rating": 5,
+    "reviewCount": 0,
+    "deletedAt": "2026-07-14T11:31:04.123Z",
+    "status": "Hidden",
+    "visibility": "Hidden"
   }
 ]

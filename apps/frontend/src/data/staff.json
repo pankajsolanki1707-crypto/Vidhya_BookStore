@@ -1,0 +1,56 @@
+[
+  {
+    "email": "owner@vidhya.com",
+    "name": "Owner VBS",
+    "role": "Owner",
+    "passwordHash": "cb53a97f57f1f574258e6796781589171eb10216ef62cec815f50d89d022e1bb7c3e00f52942393e86a40652f9a53ef7e5f14f86c2f0e09951e13137ac6d6602"
+  },
+  {
+    "email": "admin@vidhya.com",
+    "name": "Super Admin",
+    "role": "Super Admin",
+    "passwordHash": "cb53a97f57f1f574258e6796781589171eb10216ef62cec815f50d89d022e1bb7c3e00f52942393e86a40652f9a53ef7e5f14f86c2f0e09951e13137ac6d6602"
+  },
+  {
+    "email": "inventory@vidhya.com",
+    "name": "Inventory Chief",
+    "role": "Inventory Manager",
+    "passwordHash": "cb53a97f57f1f574258e6796781589171eb10216ef62cec815f50d89d022e1bb7c3e00f52942393e86a40652f9a53ef7e5f14f86c2f0e09951e13137ac6d6602"
+  },
+  {
+    "email": "sales@vidhya.com",
+    "name": "Sales Chief",
+    "role": "Sales Manager",
+    "passwordHash": "cb53a97f57f1f574258e6796781589171eb10216ef62cec815f50d89d022e1bb7c3e00f52942393e86a40652f9a53ef7e5f14f86c2f0e09951e13137ac6d6602"
+  },
+  {
+    "email": "delivery@vidhya.com",
+    "name": "Logistics Lead",
+    "role": "Delivery Manager",
+    "passwordHash": "cb53a97f57f1f574258e6796781589171eb10216ef62cec815f50d89d022e1bb7c3e00f52942393e86a40652f9a53ef7e5f14f86c2f0e09951e13137ac6d6602"
+  },
+  {
+    "email": "content@vidhya.com",
+    "name": "Content Strategist",
+    "role": "Content Manager",
+    "passwordHash": "cb53a97f57f1f574258e6796781589171eb10216ef62cec815f50d89d022e1bb7c3e00f52942393e86a40652f9a53ef7e5f14f86c2f0e09951e13137ac6d6602"
+  },
+  {
+    "email": "marketing@vidhya.com",
+    "name": "Growth Lead",
+    "role": "Marketing Manager",
+    "passwordHash": "cb53a97f57f1f574258e6796781589171eb10216ef62cec815f50d89d022e1bb7c3e00f52942393e86a40652f9a53ef7e5f14f86c2f0e09951e13137ac6d6602"
+  },
+  {
+    "email": "support@vidhya.com",
+    "name": "Customer Care Specialist",
+    "role": "Customer Support",
+    "passwordHash": "cb53a97f57f1f574258e6796781589171eb10216ef62cec815f50d89d022e1bb7c3e00f52942393e86a40652f9a53ef7e5f14f86c2f0e09951e13137ac6d6602"
+  },
+  {
+    "email": "viewer@vidhya.com",
+    "name": "Guest Auditor",
+    "role": "Viewer",
+    "passwordHash": "cb53a97f57f1f574258e6796781589171eb10216ef62cec815f50d89d022e1bb7c3e00f52942393e86a40652f9a53ef7e5f14f86c2f0e09951e13137ac6d6602"
+  }
+]

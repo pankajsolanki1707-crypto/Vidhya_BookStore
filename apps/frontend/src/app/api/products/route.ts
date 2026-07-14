@@ -5,13 +5,11 @@ import { verifyToken, sanitizeInput, validateImageUrl } from '@/lib/security';
 export const dynamic = 'force-dynamic';
 
 
-// Verify if request has a valid Admin JWT token
-function isAdminAuthorized(req: NextRequest): boolean {
-  const authHeader = req.headers.get('Authorization') || req.headers.get('x-admin-password');
-  if (!authHeader) return false;
+import { verifyRolePermission } from '@/lib/rbac';
 
-  const payload = verifyToken(authHeader);
-  return payload !== null && payload.role === 'admin';
+function isAdminAuthorized(req: NextRequest): boolean {
+  const authHeader = req.headers.get('Authorization');
+  return verifyRolePermission(authHeader, 'action_inventory_write');
 }
 
 export async function GET(req: NextRequest) {
@@ -26,6 +24,9 @@ export async function GET(req: NextRequest) {
     const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
     const limit = searchParams.get('limit') ? Number(searchParams.get('limit')) : 12;
 
+    const authHeader = req.headers.get('Authorization');
+    const isAuthorized = verifyRolePermission(authHeader, 'tab_inventory');
+
     const result = searchProducts({
       query,
       category,
@@ -34,7 +35,9 @@ export async function GET(req: NextRequest) {
       maxPrice,
       sort,
       page,
-      limit
+      limit,
+      showDeleted: isAuthorized,
+      showDrafts: isAuthorized
     });
 
     return NextResponse.json(result);

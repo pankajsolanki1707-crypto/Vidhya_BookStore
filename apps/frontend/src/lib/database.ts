@@ -23,6 +23,10 @@ export interface Product {
   featured?: boolean;
   isBestseller?: boolean;
   isNewArrival?: boolean;
+  // Soft-delete & visibility fields (admin-only)
+  deletedAt?: string;           // ISO timestamp — present means soft-deleted
+  visibility?: 'Visible' | 'Hidden' | 'Draft';
+  status?: string;
 }
 
 export interface OrderItem {
@@ -82,11 +86,16 @@ export function getProducts(): Product[] {
 // Write products
 export function saveProducts(products: Product[]): boolean {
   ensureFilesExist();
+  const tempPath = PRODUCTS_PATH + '.tmp';
   try {
-    fs.writeFileSync(PRODUCTS_PATH, JSON.stringify(products, null, 2), 'utf-8');
+    fs.writeFileSync(tempPath, JSON.stringify(products, null, 2), 'utf-8');
+    fs.renameSync(tempPath, PRODUCTS_PATH);
     return true;
   } catch (error) {
     console.error('Error writing products database:', error);
+    if (fs.existsSync(tempPath)) {
+      try { fs.unlinkSync(tempPath); } catch {}
+    }
     return false;
   }
 }
@@ -106,19 +115,30 @@ export function getOrders(): Order[] {
 // Write orders
 export function saveOrders(orders: Order[]): boolean {
   ensureFilesExist();
+  const tempPath = ORDERS_PATH + '.tmp';
   try {
-    fs.writeFileSync(ORDERS_PATH, JSON.stringify(orders, null, 2), 'utf-8');
+    fs.writeFileSync(tempPath, JSON.stringify(orders, null, 2), 'utf-8');
+    fs.renameSync(tempPath, ORDERS_PATH);
     return true;
   } catch (error) {
     console.error('Error writing orders database:', error);
+    if (fs.existsSync(tempPath)) {
+      try { fs.unlinkSync(tempPath); } catch {}
+    }
     return false;
   }
 }
 
 // Get single product by ID
-export function getProductById(id: string): Product | undefined {
+export function getProductById(id: string, includeDeleted = false): Product | undefined {
   const products = getProducts();
-  return products.find(p => p.id === id);
+  const prod = products.find(p => p.id === id);
+  if (!prod) return undefined;
+  // If not including deleted/hidden, filter out
+  if (!includeDeleted && (prod.deletedAt || prod.visibility === 'Hidden' || prod.visibility === 'Draft')) {
+    return undefined;
+  }
+  return prod;
 }
 
 // Search and filter products
@@ -131,9 +151,19 @@ export function searchProducts(filters: {
   sort?: string; // 'price-low', 'price-high', 'rating', 'newest'
   page?: number;
   limit?: number;
+  showDeleted?: boolean;
+  showDrafts?: boolean;
 }) {
   const products = getProducts();
   let filtered = [...products];
+
+  // Apply visibility and soft-deletion filters
+  if (!filters.showDeleted) {
+    filtered = filtered.filter(p => !p.deletedAt && p.visibility !== 'Hidden');
+  }
+  if (!filters.showDrafts) {
+    filtered = filtered.filter(p => p.visibility !== 'Draft');
+  }
 
   const query = filters.query?.trim().toLowerCase();
   const category = filters.category?.trim();

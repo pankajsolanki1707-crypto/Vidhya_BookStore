@@ -344,7 +344,7 @@ textarea:focus-visible {
 /* Floating Student Hub FAB */
 .student-hub-fab {
   position: fixed;
-  bottom: 100px;
+  bottom: 30px;
   right: 24px;
   z-index: 9999;
   background-color: #213D8F;
@@ -370,7 +370,7 @@ textarea:focus-visible {
 
 @media (max-width: 768px) {
   .student-hub-fab {
-    bottom: 160px !important;
+    bottom: 200px !important;
     right: 20px !important;
     padding: 10px 16px !important;
     font-size: 0.78rem !important;

@@ -1,0 +1,99 @@
+{
+  "lockouts": {
+    "admin@vidhya.com": {
+      "failedAttempts": 5,
+      "lockedUntil": 1784027895462
+    },
+    "owner@vidhya.com": {
+      "failedAttempts": 0,
+      "lockedUntil": 0
+    }
+  },
+  "otps": {},
+  "history": [
+    {
+      "id": "LOG-1784027128420-477",
+      "email": "owner@vidhya.com",
+      "ip": "::1",
+      "browser": "Chrome",
+      "os": "Windows",
+      "location": "Indore (Localhost)",
+      "loginTime": "2026-07-14T11:05:28.420Z",
+      "logoutTime": null,
+      "failedAttempts": 0,
+      "success": true
+    },
+    {
+      "id": "LOG-1784027059077-886",
+      "email": "owner@vidhya.com",
+      "ip": "::1",
+      "browser": "Chrome",
+      "os": "Windows",
+      "location": "Indore (Localhost)",
+      "loginTime": "2026-07-14T11:04:19.077Z",
+      "logoutTime": null,
+      "failedAttempts": 1,
+      "success": false
+    },
+    {
+      "id": "LOG-1784026995488-895",
+      "email": "admin@vidhya.com",
+      "ip": "::1",
+      "browser": "Chrome",
+      "os": "Windows",
+      "location": "Indore (Localhost)",
+      "loginTime": "2026-07-14T11:03:15.488Z",
+      "logoutTime": null,
+      "failedAttempts": 1,
+      "success": false
+    },
+    {
+      "id": "LOG-1784026907763-641",
+      "email": "admin@vidhya.com",
+      "ip": "::1",
+      "browser": "Chrome",
+      "os": "Windows",
+      "location": "Indore (Localhost)",
+      "loginTime": "2026-07-14T11:01:47.763Z",
+      "logoutTime": null,
+      "failedAttempts": 1,
+      "success": false
+    },
+    {
+      "id": "LOG-1784026890850-366",
+      "email": "admin@vidhya.com",
+      "ip": "::1",
+      "browser": "Chrome",
+      "os": "Windows",
+      "location": "Indore (Localhost)",
+      "loginTime": "2026-07-14T11:01:30.850Z",
+      "logoutTime": null,
+      "failedAttempts": 1,
+      "success": false
+    },
+    {
+      "id": "LOG-1784026871296-367",
+      "email": "admin@vidhya.com",
+      "ip": "::1",
+      "browser": "Chrome",
+      "os": "Windows",
+      "location": "Indore (Localhost)",
+      "loginTime": "2026-07-14T11:01:11.296Z",
+      "logoutTime": null,
+      "failedAttempts": 1,
+      "success": false
+    },
+    {
+      "id": "LOG-1784026868151-83",
+      "email": "admin@vidhya.com",
+      "ip": "::1",
+      "browser": "Chrome",
+      "os": "Windows",
+      "location": "Indore (Localhost)",
+      "loginTime": "2026-07-14T11:01:08.151Z",
+      "logoutTime": null,
+      "failedAttempts": 1,
+      "success": false
+    }
+  ]
+}

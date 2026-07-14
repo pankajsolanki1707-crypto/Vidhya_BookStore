@@ -1,0 +1,122 @@
+[
+  {
+    "id": "AUD-1784028378812-688",
+    "timestamp": "2026-07-14T11:26:18.812Z",
+    "adminName": "Inventory Uploader",
+    "ip": "127.0.0.1",
+    "browser": "Unknown",
+    "action": "IMAGE UPLOADED",
+    "oldValue": "",
+    "newValue": "/uploads/img-1784028378811-30914.webp"
+  },
+  {
+    "id": "AUD-1784027692816-561",
+    "timestamp": "2026-07-14T11:14:52.816Z",
+    "adminName": "Inventory Uploader",
+    "ip": "127.0.0.1",
+    "browser": "Unknown",
+    "action": "IMAGE UPLOADED",
+    "oldValue": "",
+    "newValue": "/uploads/img-1784027692815-60105.webp"
+  },
+  {
+    "id": "AUD-1784027128423-405",
+    "timestamp": "2026-07-14T11:05:28.423Z",
+    "adminName": "Owner VBS",
+    "ip": "::1",
+    "browser": "Chrome",
+    "action": "LOGIN SUCCESSFUL",
+    "oldValue": "",
+    "newValue": ""
+  },
+  {
+    "id": "AUD-1784027114076-370",
+    "timestamp": "2026-07-14T11:05:14.076Z",
+    "adminName": "Owner VBS",
+    "ip": "::1",
+    "browser": "Chrome",
+    "action": "2FA OTP GENERATED",
+    "oldValue": "",
+    "newValue": ""
+  },
+  {
+    "id": "AUD-1784027059079-951",
+    "timestamp": "2026-07-14T11:04:19.079Z",
+    "adminName": "Owner VBS",
+    "ip": "::1",
+    "browser": "Chrome",
+    "action": "LOGIN FAILED - INVALID PASSWORD",
+    "oldValue": "",
+    "newValue": ""
+  },
+  {
+    "id": "AUD-1784027040857-68",
+    "timestamp": "2026-07-14T11:04:00.857Z",
+    "adminName": "admin@vidhya.com",
+    "ip": "::1",
+    "browser": "Chrome",
+    "action": "LOGIN BLOCKED - ACCOUNT LOCKED",
+    "oldValue": "",
+    "newValue": ""
+  },
+  {
+    "id": "AUD-1784027004796-744",
+    "timestamp": "2026-07-14T11:03:24.796Z",
+    "adminName": "admin@vidhya.com",
+    "ip": "::1",
+    "browser": "Chrome",
+    "action": "LOGIN BLOCKED - ACCOUNT LOCKED",
+    "oldValue": "",
+    "newValue": ""
+  },
+  {
+    "id": "AUD-1784026995491-850",
+    "timestamp": "2026-07-14T11:03:15.491Z",
+    "adminName": "Super Admin",
+    "ip": "::1",
+    "browser": "Chrome",
+    "action": "LOGIN FAILED - INVALID PASSWORD",
+    "oldValue": "",
+    "newValue": ""
+  },
+  {
+    "id": "AUD-1784026907764-398",
+    "timestamp": "2026-07-14T11:01:47.764Z",
+    "adminName": "Super Admin",
+    "ip": "::1",
+    "browser": "Chrome",
+    "action": "LOGIN FAILED - INVALID PASSWORD",
+    "oldValue": "",
+    "newValue": ""
+  },
+  {
+    "id": "AUD-1784026890851-976",
+    "timestamp": "2026-07-14T11:01:30.851Z",
+    "adminName": "Super Admin",
+    "ip": "::1",
+    "browser": "Chrome",
+    "action": "LOGIN FAILED - INVALID PASSWORD",
+    "oldValue": "",
+    "newValue": ""
+  },
+  {
+    "id": "AUD-1784026871298-600",
+    "timestamp": "2026-07-14T11:01:11.298Z",
+    "adminName": "Super Admin",
+    "ip": "::1",
+    "browser": "Chrome",
+    "action": "LOGIN FAILED - INVALID PASSWORD",
+    "oldValue": "",
+    "newValue": ""
+  },
+  {
+    "id": "AUD-1784026868154-512",
+    "timestamp": "2026-07-14T11:01:08.154Z",
+    "adminName": "Super Admin",
+    "ip": "::1",
+    "browser": "Chrome",
+    "action": "LOGIN FAILED - INVALID PASSWORD",
+    "oldValue": "",
+    "newValue": ""
+  }
+]

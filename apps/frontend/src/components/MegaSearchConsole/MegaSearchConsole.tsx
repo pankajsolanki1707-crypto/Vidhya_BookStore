@@ -132,6 +132,20 @@ export default function MegaSearchConsole() {
     }
   };
 
+  const highlightMatch = (text: string, queryTerm: string) => {
+    if (!queryTerm) return text;
+    const parts = text.split(new RegExp(`(${queryTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi'));
+    return (
+      <span>
+        {parts.map((part, i) => 
+          part.toLowerCase() === queryTerm.toLowerCase() 
+            ? <mark key={i} style={{ backgroundColor: '#FCD116', color: 'inherit', padding: '0 2px', borderRadius: '2px', fontWeight: 'bold' }}>{part}</mark> 
+            : part
+        )}
+      </span>
+    );
+  };
+
   const startVoiceSearch = () => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -241,6 +255,43 @@ export default function MegaSearchConsole() {
                 </div>
               ) : suggestions.length > 0 ? (
                 <>
+                  {/* matching attributes category, author */}
+                  {(() => {
+                    const matchedCats = Array.from(new Set(suggestions.map(s => s.category).filter(c => c.toLowerCase().includes(query.toLowerCase()))));
+                    const matchedAuths = Array.from(new Set(suggestions.map(s => s.author).filter(a => a.toLowerCase().includes(query.toLowerCase()))));
+                    if (matchedCats.length === 0 && matchedAuths.length === 0) return null;
+                    return (
+                      <div style={{ padding: '8px 16px', borderBottom: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column', gap: '6px', backgroundColor: 'var(--color-bg-light)' }}>
+                        {matchedCats.map(cat => (
+                          <div
+                            key={cat}
+                            onClick={() => {
+                              router.push(`/books?category=${encodeURIComponent(cat)}`);
+                              setQuery('');
+                              setShowSuggestions(false);
+                            }}
+                            style={{ fontSize: '0.8rem', cursor: 'pointer', color: 'var(--color-primary)', fontWeight: 600, textAlign: 'left' }}
+                          >
+                            Filter by Category: <strong>{cat}</strong>
+                          </div>
+                        ))}
+                        {matchedAuths.map(auth => (
+                          <div
+                            key={auth}
+                            onClick={() => {
+                              router.push(`/books?query=${encodeURIComponent(auth)}`);
+                              setQuery('');
+                              setShowSuggestions(false);
+                            }}
+                            style={{ fontSize: '0.8rem', cursor: 'pointer', color: 'var(--color-primary)', fontWeight: 600, textAlign: 'left' }}
+                          >
+                            Books by Author: <strong>{auth}</strong>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
+
                   <div className={styles.suggestionsList}>
                     {suggestions.map((book, idx) => (
                       <div
@@ -257,9 +308,9 @@ export default function MegaSearchConsole() {
                       >
                         <img src={book.image} alt={book.title} className={styles.suggestionCover} />
                         <div className={styles.suggestionText}>
-                          <h4 className={styles.suggestionTitleText}>{book.title}</h4>
+                          <h4 className={styles.suggestionTitleText}>{highlightMatch(book.title, query)}</h4>
                           <p className={styles.suggestionMetaText}>
-                            By <span className={styles.boldText}>{book.author}</span> 
+                            By <span className={styles.boldText}>{highlightMatch(book.author, query)}</span> 
                             {book.publisher && <> | {book.publisher}</>}
                             {book.isbn && <> | ISBN: {book.isbn}</>}
                           </p>
@@ -294,7 +345,7 @@ export default function MegaSearchConsole() {
           {query.trim() === '' && (
             <div className={styles.popularSection}>
               <div className={styles.sectionHeader}>
-                <span className={styles.sectionTitle}><Sparkles size={13} style={{ marginRight: '6px' }} /> Popular Searches</span>
+                <span className={styles.sectionTitle}><History size={13} style={{ marginRight: '6px' }} /> Popular Searches</span>
               </div>
               <div className={styles.popularList}>
                 <button onClick={() => handleTagClick('MPPSC Prelims', 'Competitive Exams')} className={styles.popularItem}>🦁 MPPSC Complete GS Kit</button>

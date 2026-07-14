@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
+import GlobalMobileBars from "@/components/GlobalMobileBars";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -83,6 +84,7 @@ export default function RootLayout({
       <body>
         <CartProvider>
           {children}
+          <GlobalMobileBars />
         </CartProvider>
         <script
           dangerouslySetInnerHTML={{

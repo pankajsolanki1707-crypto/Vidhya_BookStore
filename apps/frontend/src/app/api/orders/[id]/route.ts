@@ -2,12 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { updateOrderStatus } from '@/lib/database';
 import { verifyToken, sanitizeInput } from '@/lib/security';
 
-function isAdminAuthorized(req: NextRequest): boolean {
-  const authHeader = req.headers.get('Authorization') || req.headers.get('x-admin-password');
-  if (!authHeader) return false;
+import { verifyRolePermission } from '@/lib/rbac';
 
-  const payload = verifyToken(authHeader);
-  return payload !== null && payload.role === 'admin';
+function isAdminAuthorized(req: NextRequest): boolean {
+  const authHeader = req.headers.get('Authorization');
+  return verifyRolePermission(authHeader, 'action_orders_write');
 }
 
 async function handleStatusUpdate(
