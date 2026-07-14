@@ -25,10 +25,11 @@ let ProductsController = class ProductsController {
         if (format)
             where.format = format;
         if (query) {
+            const isSqlite = database_1.prisma._activeProvider === 'sqlite';
             where.OR = [
-                { title: { contains: query, mode: 'insensitive' } },
-                { author: { contains: query, mode: 'insensitive' } },
-                { isbn: { contains: query, mode: 'insensitive' } }
+                { title: { contains: query, ...(isSqlite ? {} : { mode: 'insensitive' }) } },
+                { author: { contains: query, ...(isSqlite ? {} : { mode: 'insensitive' }) } },
+                { isbn: { contains: query, ...(isSqlite ? {} : { mode: 'insensitive' }) } }
             ];
         }
         const [products, total] = await Promise.all([

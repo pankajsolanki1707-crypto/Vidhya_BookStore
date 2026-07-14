@@ -1,20 +1,20 @@
 export declare class ProductsController {
     getProducts(query?: string, category?: string, format?: string, page?: string, limit?: string): Promise<{
         products: {
-            category: string;
-            format: string;
-            isbn: string | null;
-            author: string;
-            title: string;
             id: string;
+            title: string;
+            author: string;
             publisher: string | null;
             price: number;
             originalPrice: number | null;
+            category: string;
             subcategory: string | null;
+            format: string;
             image: string;
             description: string;
             stockCount: number;
             inStock: boolean;
+            isbn: string | null;
             pages: number | null;
             publishYear: number | null;
             featured: boolean;
@@ -31,20 +31,20 @@ export declare class ProductsController {
         pages: number;
     }>;
     getProduct(id: string): Promise<{
-        category: string;
-        format: string;
-        isbn: string | null;
-        author: string;
-        title: string;
         id: string;
+        title: string;
+        author: string;
         publisher: string | null;
         price: number;
         originalPrice: number | null;
+        category: string;
         subcategory: string | null;
+        format: string;
         image: string;
         description: string;
         stockCount: number;
         inStock: boolean;
+        isbn: string | null;
         pages: number | null;
         publishYear: number | null;
         featured: boolean;
@@ -57,20 +57,20 @@ export declare class ProductsController {
         updatedAt: Date;
     }>;
     addProduct(body: any): Promise<{
-        category: string;
-        format: string;
-        isbn: string | null;
-        author: string;
-        title: string;
         id: string;
+        title: string;
+        author: string;
         publisher: string | null;
         price: number;
         originalPrice: number | null;
+        category: string;
         subcategory: string | null;
+        format: string;
         image: string;
         description: string;
         stockCount: number;
         inStock: boolean;
+        isbn: string | null;
         pages: number | null;
         publishYear: number | null;
         featured: boolean;
@@ -83,20 +83,20 @@ export declare class ProductsController {
         updatedAt: Date;
     }>;
     updateProduct(id: string, body: any): Promise<{
-        category: string;
-        format: string;
-        isbn: string | null;
-        author: string;
-        title: string;
         id: string;
+        title: string;
+        author: string;
         publisher: string | null;
         price: number;
         originalPrice: number | null;
+        category: string;
         subcategory: string | null;
+        format: string;
         image: string;
         description: string;
         stockCount: number;
         inStock: boolean;
+        isbn: string | null;
         pages: number | null;
         publishYear: number | null;
         featured: boolean;

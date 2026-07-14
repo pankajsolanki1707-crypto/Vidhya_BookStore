@@ -23,8 +23,6 @@ export default function CartPage() {
   // Order notes state
   const [orderNotes, setOrderNotes] = useState('');
 
-  // Local shipping estimator state
-  const [shippingType, setShippingType] = useState<'indore' | 'national'>('indore');
 
   // Cross-sell products list (stationary / self-help books)
   const [crossSells, setCrossSells] = useState<any[]>([]);
@@ -69,10 +67,9 @@ export default function CartPage() {
     setCouponApplied(false);
   };
 
-  // Shipping calculation rules: free above Rs 499, otherwise Rs 49 in Indore
-  const baseShipping = shippingType === 'indore' ? 49 : 79;
-  const freeThreshold = shippingType === 'indore' ? 499 : 999;
-  const shippingCharge = cartTotal >= freeThreshold ? 0 : baseShipping;
+  // Shipping calculation rules: flat ₹49 fee on orders below ₹499
+  const freeThreshold = 499;
+  const shippingCharge = cartTotal >= freeThreshold ? 0 : 49;
 
   const giftWrapCharge = giftWrap ? 30 : 0;
   const grandTotal = Math.max(0, cartTotal - couponDiscount + shippingCharge + giftWrapCharge);
@@ -230,16 +227,9 @@ export default function CartPage() {
                     </div>
 
                     {/* Shipping Zone Selector */}
-                    <div className={styles.summaryRow} style={{ alignItems: 'center' }}>
-                      <span>Shipping Zone</span>
-                      <select 
-                        value={shippingType}
-                        onChange={(e) => setShippingType(e.target.value as any)}
-                        style={{ border: '1px solid var(--color-border)', borderRadius: '4px', padding: '4px 8px', fontSize: '0.8rem', fontWeight: 600 }}
-                      >
-                        <option value="indore">Indore Hostels (Free above ₹499)</option>
-                        <option value="national">National India (Free above ₹999)</option>
-                      </select>
+                    <div className={styles.summaryRow}>
+                      <span>Shipping Region</span>
+                      <span style={{ fontWeight: 600 }}>Standard Local Delivery</span>
                     </div>
 
                     <div className={styles.summaryRow}>

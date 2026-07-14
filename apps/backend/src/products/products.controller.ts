@@ -19,10 +19,11 @@ export class ProductsController {
     if (category) where.category = category;
     if (format) where.format = format;
     if (query) {
+      const isSqlite = (prisma as any)._activeProvider === 'sqlite';
       where.OR = [
-        { title: { contains: query, mode: 'insensitive' } },
-        { author: { contains: query, mode: 'insensitive' } },
-        { isbn: { contains: query, mode: 'insensitive' } }
+        { title: { contains: query, ...(isSqlite ? {} : { mode: 'insensitive' }) } },
+        { author: { contains: query, ...(isSqlite ? {} : { mode: 'insensitive' }) } },
+        { isbn: { contains: query, ...(isSqlite ? {} : { mode: 'insensitive' }) } }
       ];
     }
 

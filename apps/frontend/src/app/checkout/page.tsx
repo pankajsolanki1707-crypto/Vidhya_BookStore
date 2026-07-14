@@ -77,18 +77,14 @@ export default function CheckoutPage() {
   const giftWrapCharge = giftWrap ? 30 : 0;
   const grandTotal = Math.max(0, cartTotal - couponDiscount + (deliveryPreference === 'pickup' ? 0 : shippingCharge) + giftWrapCharge);
 
-  // Sync shipping charge based on cart total, pincode zone, and delivery preference
+  // Sync shipping charge based on cart total and delivery preference
   useEffect(() => {
     if (deliveryPreference === 'pickup') {
       setShippingCharge(0);
       return;
     }
-    if (isIndoreZone) {
-      setShippingCharge(cartTotal >= 499 ? 0 : 49);
-    } else {
-      setShippingCharge(cartTotal >= 999 ? 0 : 79);
-    }
-  }, [cartTotal, isIndoreZone, deliveryPreference]);
+    setShippingCharge(cartTotal >= 499 ? 0 : 49);
+  }, [cartTotal, deliveryPreference]);
 
 
   // Pincode check simulator
@@ -282,30 +278,28 @@ export default function CheckoutPage() {
                 Order ID: {successOrder.id}
               </div>
 
-              {/* GST Invoice Details summary */}
+              {/* Order Summary */}
               <div style={{ margin: '20px 0', border: '1px solid var(--color-border)', borderRadius: '12px', padding: '20px', backgroundColor: 'var(--color-bg-light)', textAlign: 'left', width: '100%' }}>
                 <h4 style={{ color: 'var(--color-primary)', fontWeight: 700, borderBottom: '1px solid var(--color-border)', paddingBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Receipt size={18} /> GST Tax Invoice Summary
+                  <Receipt size={18} /> Order Summary
                 </h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem', marginTop: '12px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span>Subtotal (Excl. Tax)</span>
-                    <span>₹{basePriceExclGst.toFixed(2)}</span>
+                    <span>Items Subtotal</span>
+                    <span>₹{cartTotal - couponDiscount}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span>CGST (9%)</span>
-                    <span>₹{cgstVal.toFixed(2)}</span>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span>SGST (9%)</span>
-                    <span>₹{sgstVal.toFixed(2)}</span>
-                  </div>
+                  {giftWrap && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>Gift Wrapping</span>
+                      <span>₹30</span>
+                    </div>
+                  )}
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>Courier Charge ({courierPartner})</span>
                     <span>{shippingCharge === 0 ? 'FREE' : `₹${shippingCharge}`}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, borderTop: '1px solid var(--color-border)', paddingTop: '8px', fontSize: '0.95rem', color: 'var(--color-primary)' }}>
-                    <span>Grand Total Paid (Incl. GST)</span>
+                    <span>Grand Total Paid</span>
                     <span>₹{grandTotal}</span>
                   </div>
                 </div>
@@ -856,15 +850,7 @@ export default function CheckoutPage() {
                       <span>₹30</span>
                     </div>
                   )}
-                  <div className={styles.pricingRow}>
-                    <span>Subtotal (Excl. Tax)</span>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>₹{basePriceExclGst.toFixed(2)}</span>
-                  </div>
-                  <div className={styles.pricingRow}>
-                    <span>18% GST (CGST + SGST)</span>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>₹{totalGstVal.toFixed(2)}</span>
-                  </div>
-                  <div className={styles.pricingRow}>
+                   <div className={styles.pricingRow}>
                     <span>Delivery Fee ({deliveryPreference === 'pickup' ? 'Store Pickup' : courierPartner})</span>
                     <span>{deliveryPreference === 'pickup' || shippingCharge === 0 ? 'FREE' : `₹${shippingCharge}`}</span>
                   </div>
