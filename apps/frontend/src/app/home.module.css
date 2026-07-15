@@ -1392,3 +1392,173 @@
   .testimonialsGrid { grid-template-columns: 1fr; }
   .instagramGrid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* Promo Banner */
+.promoBannerContainer {
+  background: linear-gradient(135deg, #162d59 0%, #2e1a47 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 48px 64px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.promoBannerTextCol {
+  flex: 1;
+  max-width: 600px;
+  z-index: 2;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.promoBannerTitle {
+  font-family: var(--font-headings);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+
+.promoBannerSubtitle {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 28px;
+}
+
+.promoBannerBtn {
+  background-color: var(--color-accent-yellow);
+  color: #121212;
+  font-family: var(--font-headings);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 12px 32px;
+  border-radius: 0px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: var(--transition-smooth);
+  display: inline-block;
+}
+
+.promoBannerBtn:hover {
+  background-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(252, 209, 22, 0.25);
+}
+
+.promoBannerVisualCol {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 260px;
+  z-index: 2;
+}
+
+.promoBannerBookStack {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  position: relative;
+}
+
+.promoBook {
+  width: 100px;
+  height: 145px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.promoBook:hover {
+  transform: translateY(-10px) rotate(-2deg);
+}
+
+.bookUpsc {
+  background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+  transform: rotate(-6deg) translateY(-10px);
+  z-index: 2;
+}
+
+.bookMppsc {
+  background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
+  z-index: 3;
+}
+
+.bookCbse {
+  background: linear-gradient(135deg, #047857 0%, #064e3b 100%);
+  transform: rotate(6deg) translateY(-15px);
+  z-index: 2;
+}
+
+.bookBadge {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 2px 4px;
+  align-self: flex-start;
+  text-transform: uppercase;
+}
+
+.bookTitle {
+  font-family: var(--font-headings);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+  margin-top: 16px;
+  flex: 1;
+}
+
+.bookAuthor {
+  font-size: 0.55rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: right;
+}
+
+.visualSparkle1, .visualSparkle2, .visualSparkle3 {
+  position: absolute;
+  color: #fcd116;
+  font-size: 1.5rem;
+  animation: floatSparkle 4s infinite ease-in-out;
+}
+
+.visualSparkle1 { top: 20px; left: 40px; animation-delay: 0s; }
+.visualSparkle2 { bottom: 30px; right: 40px; animation-delay: 1.5s; }
+.visualSparkle3 { top: 60px; right: 120px; animation-delay: 0.8s; }
+
+@keyframes floatSparkle {
+  0%, 100% { transform: translateY(0px) scale(1); opacity: 0.8; }
+  50% { transform: translateY(-12px) scale(1.2); opacity: 1; }
+}
+
+@media (max-width: 900px) {
+  .promoBannerContainer {
+    flex-direction: column;
+    padding: 36px 24px;
+    gap: 32px;
+  }
+  .promoBannerTextCol {
+    align-items: center;
+    text-align: center;
+  }
+  .promoBannerTitle {
+    font-size: 1.8rem;
+  }
+  .promoBannerSubtitle {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+  }
+}
