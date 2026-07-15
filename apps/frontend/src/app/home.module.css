@@ -1562,3 +1562,38 @@
     margin-bottom: 20px;
   }
 }
+
+/* Gallery Grid */
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.galleryCard {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.galleryImg {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.galleryCard:hover .galleryImg {
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .galleryGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .galleryImg {
+    height: 180px;
+  }
+}

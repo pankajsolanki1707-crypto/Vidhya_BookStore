@@ -155,10 +155,32 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. Mega Search Console */}
-      <section style={{ backgroundColor: '#ffffff', paddingBottom: '40px', paddingTop: '8px' }}>
+      {/* 3. Bookstore Gallery Grid */}
+      <section style={{ backgroundColor: '#ffffff', paddingBottom: '48px', paddingTop: '16px' }}>
         <div className="container">
-          <MegaSearchConsole />
+          <div className={styles.galleryGrid}>
+            <div className={styles.galleryCard}>
+              <img 
+                src="/images/storefront_entry.jpg" 
+                alt="Vidhya Book Store Front Entrance" 
+                className={styles.galleryImg}
+              />
+            </div>
+            <div className={styles.galleryCard}>
+              <img 
+                src="/images/shop_interior.jpg" 
+                alt="Vidhya Book Store Shop Interior" 
+                className={styles.galleryImg}
+              />
+            </div>
+            <div className={styles.galleryCard}>
+              <img 
+                src="/images/bookshelves.jpg" 
+                alt="Vidhya Book Store Bookshelves" 
+                className={styles.galleryImg}
+              />
+            </div>
+          </div>
         </div>
       </section>
 
