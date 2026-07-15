@@ -17,6 +17,7 @@ export default function Navbar() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   
   const [activeIndex, setActiveIndex] = useState(-1);
   const [compareItems, setCompareItems] = useState<any[]>([]);
@@ -254,15 +255,60 @@ export default function Navbar() {
           <div className={styles.navContainer}>
             {/* Logo */}
             <Link href="/" className={styles.logo}>
-              <BookOpen size={28} className={styles.logoIcon} />
+              <BookOpen size={24} className={styles.logoIcon} />
               <div className={styles.logoText}>
                 <span className={styles.brandMain}>VIDHYA</span>
-                <span className={styles.brandSub}>BOOK STORE & STATIONERY</span>
+                <span className={styles.brandSub}>BOOK STORE</span>
               </div>
             </Link>
 
-            {/* Live Search Bar */}
-            <div className={styles.searchContainer} ref={searchRef}>
+            {/* Desktop Navigation Links (Centered) */}
+            <nav className={styles.navMenu}>
+              <Link href="/" className={styles.navLink}>Home</Link>
+              <Link href="/books?category=Competitive%20Exams" className={styles.navLink}>Competitive Exams</Link>
+              <Link href="/books?category=Academic%20Textbooks" className={styles.navLink}>Textbooks</Link>
+              <Link href="/books?category=Stationery" className={styles.navLink}>Stationery</Link>
+              <Link href="/books?category=Used%20Books" className={styles.navLink}>Used Books</Link>
+              <Link href="/contact" className={styles.navLink}>Support</Link>
+            </nav>
+
+            {/* Actions (Right) */}
+            <div className={styles.navActions}>
+              {/* Search Toggle Icon */}
+              <button 
+                type="button" 
+                onClick={() => setIsSearchExpanded(!isSearchExpanded)} 
+                className={styles.searchToggleBtn}
+                title="Search Products"
+              >
+                <Search size={20} />
+              </button>
+
+              {/* Cart Link */}
+              <Link href="/cart" className={styles.cartIconContainer}>
+                <ShoppingBag size={20} className={styles.cartIcon} />
+                {cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
+              </Link>
+
+              {/* Admin shortcut */}
+              <Link href="/admin" className={styles.adminIconBtn} title="Staff Login">
+                <BookOpen size={20} />
+              </Link>
+
+              {/* Mobile Menu Button */}
+              <button
+                className={styles.mobileMenuBtn}
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label="Toggle menu"
+              >
+                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Slide-down Search Console */}
+          {isSearchExpanded && (
+            <div className={styles.searchBarSlideDown} ref={searchRef}>
               <form onSubmit={handleSearchSubmit} className={styles.searchForm} style={{ display: 'flex', alignItems: 'center', width: '100%', position: 'relative' }}>
                 <input
                   type="text"
@@ -379,7 +425,7 @@ export default function Navbar() {
                                 borderRadius: 'var(--radius-full)',
                                 backgroundColor: 'var(--color-bg-light)',
                                 cursor: 'pointer',
-                                color: 'var(--color-text-main)'
+                                  color: 'var(--color-text-main)'
                               }}
                             >
                               {t.label}
@@ -467,119 +513,10 @@ export default function Navbar() {
                 </div>
               )}
             </div>
-
-            {/* Desktop Navigation Links */}
-            <nav className={styles.navMenu}>
-              <Link href="/" className={styles.navLink}>Home</Link>
-              
-              {/* Mega Menu Trigger */}
-              <div className={styles.megaMenuTrigger}>
-                <Link href="/books" className={styles.navLink}>
-                  Browse Books
-                </Link>
-                <div className={styles.megaMenuContainer}>
-                  <div className={styles.megaMenuGrid}>
-                    {/* Column 1 */}
-                    <div className={styles.megaMenuColumn}>
-                      <h4 className={styles.megaMenuTitle}>Competitive</h4>
-                      <Link href="/books?category=Competitive%20Exams&exam=UPSC" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>🏛️</span> UPSC Prep
-                      </Link>
-                      <Link href="/books?category=Competitive%20Exams&exam=MPPSC" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>🦁</span> MPPSC Prep
-                      </Link>
-                      <Link href="/books?category=Competitive%20Exams&exam=SSC" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>📋</span> SSC & Vyapam
-                      </Link>
-                      <Link href="/books?category=Competitive%20Exams&exam=Banking" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>💰</span> Banking & Rail
-                      </Link>
-                    </div>
-
-                    {/* Column 2 */}
-                    <div className={styles.megaMenuColumn}>
-                      <h4 className={styles.megaMenuTitle}>Academic</h4>
-                      <Link href="/books?category=Academic%20Textbooks&subcategory=Engineering" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>⚙️</span> Engineering
-                      </Link>
-                      <Link href="/books?category=Academic%20Textbooks&subcategory=Medical" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>🩺</span> Medical Science
-                      </Link>
-                      <Link href="/books?category=Academic%20Textbooks&subcategory=Management" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>📊</span> BBA / MBA Notes
-                      </Link>
-                      <Link href="/books?category=Academic%20Textbooks&subcategory=Law" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>⚖️</span> Law & CLAT
-                      </Link>
-                    </div>
-
-                    {/* Column 3 */}
-                    <div className={styles.megaMenuColumn}>
-                      <h4 className={styles.megaMenuTitle}>School & Fiction</h4>
-                      <Link href="/books?category=Academic%20Textbooks&subcategory=School" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>🎒</span> CBSE Sets
-                      </Link>
-                      <Link href="/books?category=Novels%20%26%20Literature" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>📚</span> Novels / Literature
-                      </Link>
-                      <Link href="/books?category=Academic%20Textbooks&subcategory=Children" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>🧸</span> Children Stories
-                      </Link>
-                    </div>
-
-                    {/* Column 4 */}
-                    <div className={styles.megaMenuColumn}>
-                      <h4 className={styles.megaMenuTitle}>Stationery & Used</h4>
-                      <Link href="/books?category=Stationery" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>🖋️</span> Stationery Store
-                      </Link>
-                      <Link href="/books?category=Used%20Books" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>🔄</span> Swap Used Books
-                      </Link>
-                      <Link href="/books?sort=rating" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>⭐</span> Best Sellers
-                      </Link>
-                      <Link href="/books?sort=newest" className={styles.megaMenuItem}>
-                        <span className={styles.itemIcon}>✨</span> New Arrivals
-                      </Link>
-                    </div>
-
-                    {/* Column 5: Spotlight */}
-                    <div className={styles.megaMenuPromoColumn}>
-                      <span className={styles.promoLabel}>🔥 10% STUDENT OFF</span>
-                      <img src="/images/store_banner.png" alt="Student Store banner" className={styles.promoImage} />
-                      <Link href="/books?category=Competitive%20Exams" className={styles.promoLink}>
-                        MPPSC & UPSC Books →
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Link href="/books?category=Stationery" className={styles.navLink}>Stationery</Link>
-              <Link href="/contact" className={styles.navLink}>Support</Link>
-              <Link href="/admin" className={styles.navLink}>Admin Portal</Link>
-            </nav>
-
-            {/* Icons */}
-            <div className={styles.navActions}>
-              <Link href="/cart" className={styles.cartIconContainer}>
-                <ShoppingBag size={24} className={styles.cartIcon} />
-                {cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
-              </Link>
-
-              {/* Mobile Menu Button */}
-              <button
-                className={styles.mobileMenuBtn}
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                aria-label="Toggle menu"
-              >
-                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
-            </div>
-          </div>
+          )}
         </div>
       </div>
+
 
       {/* Mobile Drawer Navigation */}
       {isMobileMenuOpen && (
