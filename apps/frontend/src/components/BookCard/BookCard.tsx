@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/lib/database';
-import { Star, ShoppingCart, Tag, Heart, Eye, GitCompare } from 'lucide-react';
+import { Star, ShoppingCart, Tag, Heart, Eye, GitCompare, X } from 'lucide-react';
 import styles from './BookCard.module.css';
 
 interface BookCardProps {

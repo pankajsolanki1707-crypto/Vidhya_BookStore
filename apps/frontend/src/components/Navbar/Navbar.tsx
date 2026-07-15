@@ -21,14 +21,29 @@ export default function Navbar() {
   const [activeIndex, setActiveIndex] = useState(-1);
   const [compareItems, setCompareItems] = useState<any[]>([]);
   const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   
   const searchRef = useRef<HTMLDivElement>(null);
 
+  // Scroll listener for sticky navigation shadows
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Rotating Announcement Bar state
   const announcements = [
-    "🚚 Free local delivery in Indore on all orders above ₹499!",
-    "🎉 Promo Coupon: Use VIDHYA10 to get 10% OFF on all books!",
-    "⚡ Welcome Coupon: Use WELCOME50 to save ₹50 instantly on checkout!"
+    "🚚 Free Indore delivery on orders above ₹499!",
+    "🔥 Today's Offer: Use code VIDHYA10 for 10% Off!",
+    "📞 Call Support: 9752809717",
+    "💬 WhatsApp Support: 9752809717"
   ];
   const [currentAnnouncementIndex, setCurrentAnnouncementIndex] = useState(0);
 
@@ -234,7 +249,7 @@ export default function Navbar() {
       </div>
 
       {/* Main Navbar */}
-      <div className={styles.navbar}>
+      <div className={`${styles.navbar} ${scrolled ? styles.navbarScrolled : ''}`}>
         <div className="container">
           <div className={styles.navContainer}>
             {/* Logo */}
