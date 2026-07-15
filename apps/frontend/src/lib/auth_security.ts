@@ -103,13 +103,21 @@ export function resetAttempts(email: string) {
   }
 }
 
+import crypto from 'crypto';
+
 export function generatePersistentOTP(email: string): string {
   const data = ensureDataExists();
-  const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digits
+  // Cryptographically secure 6-digit OTP
+  const codeVal = crypto.randomInt(100000, 1000000);
+  const code = codeVal.toString();
+  
   const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes expiration
   const resendAllowedAfter = Date.now() + 60 * 1000; // 60s cooldown
 
-  data.otps[email] = { code, expiresAt, resendAllowedAfter };
+  // Hash code with SHA-256 before storage
+  const hashedCode = crypto.createHash('sha256').update(code).digest('hex');
+
+  data.otps[email] = { code: hashedCode, expiresAt, resendAllowedAfter };
   writeData(data);
   return code;
 }
@@ -125,7 +133,9 @@ export function verifyPersistentOTP(email: string, code: string): boolean {
     return false;
   }
 
-  const matches = record.code === code;
+  // Hash user input to compare with stored hashed code
+  const hashedInput = crypto.createHash('sha256').update(code).digest('hex');
+  const matches = record.code === hashedInput;
   if (matches) {
     delete data.otps[email]; // OTP cannot be reused
     writeData(data);

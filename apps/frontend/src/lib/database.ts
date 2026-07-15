@@ -270,13 +270,40 @@ export function addProduct(product: Omit<Product, 'rating' | 'reviewCount'>): Pr
   return newProduct;
 }
 
+// Helper to remove unused image uploads from disk
+function cleanUnusedImages(oldProduct: Product | undefined, newProduct: Product | null) {
+  if (!oldProduct) return;
+  try {
+    const products = getProducts();
+    const oldImages = [oldProduct.image, (oldProduct as any).backCoverImage, (oldProduct as any).insidePageImage].filter(Boolean) as string[];
+    const newImages = newProduct ? [newProduct.image, (newProduct as any).backCoverImage, (newProduct as any).insidePageImage].filter(Boolean) as string[] : [];
+
+    for (const img of oldImages) {
+      if (newImages.includes(img)) continue;
+      // Check if any other product in database references the same image path
+      const isStillUsed = products.some(p => p.image === img || (p as any).backCoverImage === img || (p as any).insidePageImage === img);
+      if (!isStillUsed && img.startsWith('/uploads/')) {
+        const filePath = path.join(process.cwd(), 'public', img);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+          console.log(`[CLEANUP] Deleted unused image file: ${filePath}`);
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Error during image cleanup:', err);
+  }
+}
+
 // Edit a product (admin)
 export function updateProduct(id: string, updatedFields: Partial<Product>): Product | undefined {
   const products = getProducts();
   const index = products.findIndex(p => p.id === id);
   if (index !== -1) {
+    const oldProduct = { ...products[index] };
     products[index] = { ...products[index], ...updatedFields };
     saveProducts(products);
+    cleanUnusedImages(oldProduct, products[index]);
     return products[index];
   }
   return undefined;
@@ -285,9 +312,12 @@ export function updateProduct(id: string, updatedFields: Partial<Product>): Prod
 // Delete a product (admin)
 export function deleteProduct(id: string): boolean {
   const products = getProducts();
-  const filtered = products.filter(p => p.id !== id);
-  if (filtered.length !== products.length) {
+  const index = products.findIndex(p => p.id === id);
+  if (index !== -1) {
+    const oldProduct = { ...products[index] };
+    const filtered = products.filter(p => p.id !== id);
     saveProducts(filtered);
+    cleanUnusedImages(oldProduct, null);
     return true;
   }
   return false;

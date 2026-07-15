@@ -14,7 +14,11 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
+const crypto = require("crypto");
 let AuthController = class AuthController {
+    constructor() {
+        this.otps = new Map();
+    }
     async login(body) {
         const { email, password } = body;
         if (!email || !password) {
@@ -22,24 +26,44 @@ let AuthController = class AuthController {
         }
         const adminPassword = process.env.ADMIN_PASSWORD || 'VidhyaBookStoreIndore2026';
         if (email === 'admin@vidhya.com' && password === adminPassword) {
-            return { success: true, role: 'admin', token: 'jwt-signed-admin-token-2026' };
+            const codeVal = crypto.randomInt(100000, 1000000).toString();
+            const hashedCode = crypto.createHash('sha256').update(codeVal).digest('hex');
+            const expiresAt = Date.now() + 5 * 60 * 1000;
+            this.otps.set(email, { hashedCode, expiresAt });
+            console.log(`[BACKEND SECURITY] 6-digit OTP for ${email}: [ ${codeVal} ]`);
+            return {
+                success: true,
+                is2faRequired: true,
+                tempReference: email,
+                otp: codeVal
+            };
         }
         return { success: true, role: 'student', token: `jwt-student-${email}` };
     }
     async register(body) {
-        const { email, name, phone } = body;
+        const { email, name } = body;
         if (!email || !name) {
             throw new common_1.HttpException('Email and name are required', common_1.HttpStatus.BAD_REQUEST);
         }
         return { success: true, message: `Account pending email verification for: ${email}` };
     }
     async verifyOtp(body) {
-        const { phone, code } = body;
-        if (!phone || !code) {
-            throw new common_1.HttpException('Phone number and code required', common_1.HttpStatus.BAD_REQUEST);
+        const { email, code } = body;
+        if (!email || !code) {
+            throw new common_1.HttpException('Email and code required', common_1.HttpStatus.BAD_REQUEST);
         }
-        if (code === '1234') {
-            return { success: true, token: `jwt-signed-phone-${phone}` };
+        const record = this.otps.get(email);
+        if (!record) {
+            throw new common_1.HttpException('Invalid or expired OTP', common_1.HttpStatus.UNAUTHORIZED);
+        }
+        if (Date.now() > record.expiresAt) {
+            this.otps.delete(email);
+            throw new common_1.HttpException('OTP has expired', common_1.HttpStatus.UNAUTHORIZED);
+        }
+        const hashedInput = crypto.createHash('sha256').update(code).digest('hex');
+        if (record.hashedCode === hashedInput) {
+            this.otps.delete(email);
+            return { success: true, role: 'admin', token: 'jwt-signed-admin-token-2026' };
         }
         throw new common_1.HttpException('Invalid verification OTP code', common_1.HttpStatus.UNAUTHORIZED);
     }

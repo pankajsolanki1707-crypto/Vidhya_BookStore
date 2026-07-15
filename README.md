@@ -26,7 +26,7 @@ AG_VBS_Store/
 
 ## 🗄️ Database Schema Documentation
 
-The system is configured to run on **PostgreSQL**. The Prisma schema maps relational structures for civil services study notes and calculator stock catalogs:
+The system is configured to run on **SQLite** / **PostgreSQL**. The Prisma schema maps relational structures for civil services study notes and calculator stock catalogs:
 
 ### 1. `User` Model
 * `id` (UUID, Primary Key): Unique student account id.
@@ -70,19 +70,19 @@ The system is configured to run on **PostgreSQL**. The Prisma schema maps relati
 All NestJS backend endpoints serve requests on `http://localhost:3001` with standard JSON payloads:
 
 ### 1. Authentication (`/auth`)
-* `POST /auth/login`: Accepts email and password. Returns signed JWT token.
+* `POST /auth/login`: Validate email and password.
 * `POST /auth/register`: Submits signup information.
-* `POST /auth/otp`: Verifies 4-digit SMS OTP verification (default code `1234`).
+* `POST /auth/otp`: Verifies dynamic 2FA verification.
 
 ### 2. Catalog Products (`/products`)
 * `GET /products`: Searches catalog using search filters (query, category, format, page, limit).
 * `GET /products/:id`: Fetches detailed specifications and reviews for a book.
-* `POST /products`: Registers a new book (requires admin JWT token).
+* `POST /products`: Registers a new book (requires admin authentication).
 * `PUT /products/:id`: Updates stock level or pricing.
 * `DELETE /products/:id`: Removes item from search index.
 
 ### 3. Orders & Shipments (`/orders`)
-* `GET /orders`: Fetches all store orders (requires admin JWT).
+* `GET /orders`: Fetches all store orders.
 * `POST /orders`: Places purchase order. Sanitizes inputs and checks stock count.
 * `PATCH /orders/:id`: Triggers shipping status updates.
 
@@ -92,10 +92,11 @@ All NestJS backend endpoints serve requests on `http://localhost:3001` with stan
 
 Administrators can manage the store operations at `http://localhost:3000/admin`:
 
-1. **Cataloging New Books**: Click `Catalog Book` to open the detail form, enter title, authors, prices, and upload covers.
-2. **Bulk CSV Imports**: Click `Bulk Import` to select Excel sheets. The system automatically reads columns for authors and page counts to index them.
-3. **Sticker Barcode Printing**: Click the `Barcode` icon next to any book to render a custom scannable sticker.
-4. **GST Invoice Exports**: Click the `Invoice` link on orders. It generates a print-ready PDF invoice with subtotal tax separations.
+1. **Secure Admin Authentication**: Access via credential checking followed by a cryptographically secure 6-digit OTP verification code modal.
+2. **Cataloging & Product Management**: Catalog new books individually via a comprehensive management form, supporting description, meta tags, and specifications.
+3. **Product Cover Uploads**: Drag-and-drop or browse local cover images with size and format validation, aspect-ratio maintaining, and previews.
+4. **Sticker Barcode Printing**: Click the `Barcode` icon next to any book to render a custom scannable sticker.
+5. **GST Invoice Exports**: Click the `Invoice` link on orders. It generates a print-ready PDF invoice with subtotal tax separations.
 
 ---
 

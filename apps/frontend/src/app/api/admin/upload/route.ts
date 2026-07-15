@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 import { verifyRolePermission } from '@/lib/rbac';
 import { writeAuditRecord } from '@/lib/audit_logs';
 
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { image, filename = 'uploaded_image.webp' } = body;
+    const { image } = body;
 
     if (!image || !image.startsWith('data:image/')) {
       return NextResponse.json({ error: 'Invalid image format. Expected data URI' }, { status: 400 });
@@ -36,15 +37,16 @@ export async function POST(req: NextRequest) {
       fs.mkdirSync(uploadsDir, { recursive: true });
     }
 
-    // Generate unique name
-    const ext = '.webp';
-    const uniqueName = `img-${Date.now()}-${Math.floor(Math.random() * 100000)}${ext}`;
+    // Content-addressable file naming to prevent duplicate uploads
+    const fileHash = crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 32);
+    const uniqueName = `img-${fileHash}.webp`;
     const filePath = path.join(uploadsDir, uniqueName);
-
-    // Save optimized file
-    fs.writeFileSync(filePath, buffer);
-
     const relativeUrl = `/uploads/${uniqueName}`;
+
+    // Only write to disk if file doesn't already exist
+    if (!fs.existsSync(filePath)) {
+      fs.writeFileSync(filePath, buffer);
+    }
 
     writeAuditRecord({
       adminName: 'Inventory Uploader',

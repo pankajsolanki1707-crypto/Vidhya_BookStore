@@ -18,22 +18,25 @@ export default function AuthPage() {
   const [otpPhone, setOtpPhone] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [otpCode, setOtpCode] = useState('');
+  const [generatedOtp, setGeneratedOtp] = useState('');
 
   const handleOtpAction = () => {
     if (!otpSent) {
       if (otpPhone.trim().length >= 10) {
+        const randomOtp = Math.floor(100000 + Math.random() * 900000).toString();
+        setGeneratedOtp(randomOtp);
         setOtpSent(true);
-        alert(`Verification OTP code sent to phone number: ${otpPhone}! Enter 1234 to verify. 💬`);
+        alert(`Verification OTP code sent to phone number: ${otpPhone}! Enter ${randomOtp} to verify. 💬`);
       } else {
         alert('Please enter a valid 10-digit mobile number.');
       }
     } else {
-      if (otpCode === '1234') {
+      if (otpCode === generatedOtp) {
         alert('OTP Verified successfully! Welcome back to Vidhya Books.');
         localStorage.setItem('vbs_user_token', `phone.${otpPhone}@vidhyabookstore.com`);
         window.location.href = '/account';
       } else {
-        alert('Invalid OTP. Please enter the code "1234" to verify.');
+        alert(`Invalid OTP. Please enter the correct verification code sent to your phone.`);
       }
     }
   };
@@ -154,14 +157,14 @@ export default function AuthPage() {
                       </div>
                       {otpSent ? (
                         <div className={styles.formGroup}>
-                          <label htmlFor="l-code">Enter 4-Digit OTP *</label>
+                          <label htmlFor="l-code">Enter 6-Digit OTP *</label>
                           <input
                             type="text"
                             id="l-code"
                             value={otpCode}
                             onChange={(e) => setOtpCode(e.target.value)}
-                            placeholder="e.g. 1234"
-                            maxLength={4}
+                            placeholder="e.g. 100000"
+                            maxLength={6}
                             required
                             className={styles.input}
                           />
