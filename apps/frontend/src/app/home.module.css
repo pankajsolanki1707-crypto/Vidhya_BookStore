@@ -9,7 +9,7 @@
    SPACING & LAYOUT
 ============================================================ */
 .sectionPadding {
-  padding: 88px 0;
+  padding: 48px 0;
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -21,7 +21,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 48px;
+  margin-bottom: 24px;
 }
 
 .sectionTitle {
@@ -53,15 +53,14 @@
 .viewAllLink {
   color: var(--color-primary);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   display: flex;
   align-items: center;
   gap: 5px;
   padding: 8px 16px;
-  border: 1.5px solid var(--color-primary);
   border-radius: var(--radius-full);
+  border: 1px solid var(--color-primary-light);
   transition: var(--transition-smooth);
-  white-space: nowrap;
 }
 
 .viewAllLink:hover {
@@ -74,7 +73,7 @@
 .booksGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 28px;
+  gap: 20px;
 }
 
 /* ============================================================
@@ -1365,9 +1364,9 @@
 }
 
 @media (max-width: 768px) {
-  .sectionPadding { padding: 64px 0; }
+  .sectionPadding { padding: 36px 0; }
   .sectionTitle { font-size: 1.7rem; }
-  .booksGrid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .booksGrid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .trustGrid { grid-template-columns: 1fr 1fr; }
   .aboutLayout { grid-template-columns: 1fr; gap: 40px; }
   .mobileBottomNav { display: block; }
@@ -1375,7 +1374,7 @@
 }
 
 @media (max-width: 600px) {
-  .sectionPadding { padding: 48px 0; }
+  .sectionPadding { padding: 28px 0; }
   .megaSearchForm { flex-direction: column; align-items: stretch; }
   .megaSearchSelect { border-right: none; border-bottom: 1px solid var(--color-border); }
   .newsletterForm { flex-direction: column; }

@@ -121,18 +121,18 @@
 /* Book Image styling */
 .imageLink {
   background-color: var(--color-bg-light);
-  padding: 24px 12px;
+  padding: 16px 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  height: 220px;
+  height: 190px;
   border-bottom: 1px solid rgba(0,0,0,0.02);
 }
 
 .imageContainer {
-  width: 130px;
-  height: 180px;
+  width: 110px;
+  height: 155px;
   position: relative;
   transition: var(--transition-elastic);
   box-shadow: 0 8px 16px -4px rgba(33, 61, 143, 0.15);
@@ -188,7 +188,7 @@
 
 /* Content styling */
 .content {
-  padding: 16px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -199,7 +199,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .formatBadge {
@@ -221,16 +221,16 @@
 }
 
 .title {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--color-primary);
-  line-height: 1.4;
+  line-height: 1.35;
   margin-bottom: 4px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  height: 2.8em; /* Force height so titles align cards */
+  height: 2.7em; /* Force height so titles align cards */
 }
 
 .title a:hover {
@@ -238,9 +238,9 @@
 }
 
 .author {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--color-text-muted);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -251,7 +251,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .stars {
@@ -275,7 +275,7 @@
 
 /* Delivery Estimation */
 .deliveryRow {
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .deliveryEstimate {
