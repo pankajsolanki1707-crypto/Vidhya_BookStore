@@ -378,44 +378,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 17. Instagram Mock Grid */}
-      <section className={styles.sectionPadding}>
-        <div className="container">
-          <div className={styles.sectionTitleContainer}>
-            <div>
-              <h2 className={styles.sectionTitle}>#VidhyaAspirants Feed 📸</h2>
-              <p className={styles.sectionSubtitle}>Follow our community handles for UPSC quotes, study hacks, and new register stocks</p>
-            </div>
-          </div>
 
-          <div className={styles.instagramGrid}>
-            <div className={styles.instagramCard}>
-              <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&auto=format&fit=crop&q=60" alt="Insta Post" className={styles.instagramImg} />
-              <div className={styles.instagramOverlay}>UPSC Focus 🎯</div>
-            </div>
-            <div className={styles.instagramCard}>
-              <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400&auto=format&fit=crop&q=60" alt="Insta Post" className={styles.instagramImg} />
-              <div className={styles.instagramOverlay}>MP GK Guides 🗺️</div>
-            </div>
-            <div className={styles.instagramCard}>
-              <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=400&auto=format&fit=crop&q=60" alt="Insta Post" className={styles.instagramImg} />
-              <div className={styles.instagramOverlay}>Classmate Packs ✏️</div>
-            </div>
-            <div className={styles.instagramCard}>
-              <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&auto=format&fit=crop&q=60" alt="Insta Post" className={styles.instagramImg} />
-              <div className={styles.instagramOverlay}>Self-Help Books 📖</div>
-            </div>
-            <div className={styles.instagramCard}>
-              <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&auto=format&fit=crop&q=60" alt="Insta Post" className={styles.instagramImg} />
-              <div className={styles.instagramOverlay}>Indore Deliveries ⚡</div>
-            </div>
-            <div className={styles.instagramCard}>
-              <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&auto=format&fit=crop&q=60" alt="Insta Post" className={styles.instagramImg} />
-              <div className={styles.instagramOverlay}>Aspirant Goals 🏆</div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* 18. Newsletter Section */}
       <section className={styles.newsletterSection}>

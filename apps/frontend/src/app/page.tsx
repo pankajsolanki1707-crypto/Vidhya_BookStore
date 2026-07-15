@@ -338,32 +338,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 17. Community Feed */}
-      <section className={styles.sectionPadding} style={{ backgroundColor: 'var(--color-bg-light)' }}>
-        <div className="container">
-          <div className={styles.sectionTitleContainer}>
-            <div>
-              <h2 className={styles.sectionTitle}>#VidhyaAspirants Feed 📸</h2>
-              <p className={styles.sectionSubtitle}>Follow our community for UPSC quotes, study hacks &amp; new stock alerts</p>
-            </div>
-          </div>
-          <div className={styles.instagramGrid}>
-            {[
-              { src: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&auto=format&fit=crop&q=60', label: 'UPSC Focus 🎯' },
-              { src: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400&auto=format&fit=crop&q=60', label: 'MP GK Guides 🗺️' },
-              { src: 'https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=400&auto=format&fit=crop&q=60', label: 'Classmate Packs ✏️' },
-              { src: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&auto=format&fit=crop&q=60', label: 'Self-Help Books 📖' },
-              { src: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&auto=format&fit=crop&q=60', label: 'Indore Deliveries ⚡' },
-              { src: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&auto=format&fit=crop&q=60', label: 'Aspirant Goals 🏆' },
-            ].map((item, i) => (
-              <div key={i} className={styles.instagramCard}>
-                <img src={item.src} alt={item.label} className={styles.instagramImg} />
-                <div className={styles.instagramOverlay}>{item.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* 18. FAQ */}
       <section className={`${styles.sectionPadding} ${styles.faqSection}`}>
