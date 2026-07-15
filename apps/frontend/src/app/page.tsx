@@ -95,8 +95,48 @@ export default function Home() {
       {/* Navigation */}
       <Navbar />
 
-      {/* 1. Hero Banner */}
-      <Hero />
+      {/* 1. Exam Promo Banner (Directly below header) */}
+      <section style={{ padding: '0', backgroundColor: 'var(--color-bg-white)' }}>
+        <div className="container" style={{ paddingTop: '16px' }}>
+          <div className={styles.promoBannerContainer}>
+            <div className={styles.promoBannerTextCol}>
+              <h2 className={styles.promoBannerTitle}>Crack Every Exam with the Right Book</h2>
+              <p className={styles.promoBannerSubtitle}>Curated study materials for UPSC, MPPSC, and all government exams.</p>
+              <Link href="/books?category=Competitive%20Exams" className={styles.promoBannerBtn}>
+                SHOP NOW
+              </Link>
+            </div>
+            
+            <div className={styles.promoBannerVisualCol}>
+              <div className={styles.promoBannerBookStack}>
+                {/* Book 1 */}
+                <div className={`${styles.promoBook} ${styles.bookUpsc}`}>
+                  <div className={styles.bookBadge}>UPSC</div>
+                  <div className={styles.bookTitle}>INDIAN POLITY</div>
+                  <div className={styles.bookAuthor}>Laxmikanth</div>
+                </div>
+                {/* Book 2 */}
+                <div className={`${styles.promoBook} ${styles.bookMppsc}`}>
+                  <div className={styles.bookBadge}>MPPSC</div>
+                  <div className={styles.bookTitle}>GEOGRAPHY</div>
+                  <div className={styles.bookAuthor}>Vidhya Notes</div>
+                </div>
+                {/* Book 3 */}
+                <div className={`${styles.promoBook} ${styles.bookCbse}`}>
+                  <div className={styles.bookBadge}>CBSE</div>
+                  <div className={styles.bookTitle}>QUESTION BANK</div>
+                  <div className={styles.bookAuthor}>Oswaal Books</div>
+                </div>
+              </div>
+              
+              {/* Sparkles / Floating elements */}
+              <div className={styles.visualSparkle1}>✨</div>
+              <div className={styles.visualSparkle2}>⚡</div>
+              <div className={styles.visualSparkle3}>✨</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* 2. Trust Section */}
       <section className={styles.trustSection}>
@@ -158,49 +198,6 @@ export default function Home() {
                 <span className={styles.catTitle}>{cat.label}</span>
               </Link>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 4.5 Exam Promo Banner (Inspired by the B3Books Competitive Banner) */}
-      <section style={{ padding: '24px 0', backgroundColor: 'var(--color-bg-white)' }}>
-        <div className="container">
-          <div className={styles.promoBannerContainer}>
-            <div className={styles.promoBannerTextCol}>
-              <h2 className={styles.promoBannerTitle}>Crack Every Exam with the Right Book</h2>
-              <p className={styles.promoBannerSubtitle}>Curated study materials for UPSC, MPPSC, and all government exams.</p>
-              <Link href="/books?category=Competitive%20Exams" className={styles.promoBannerBtn}>
-                SHOP NOW
-              </Link>
-            </div>
-            
-            <div className={styles.promoBannerVisualCol}>
-              <div className={styles.promoBannerBookStack}>
-                {/* Book 1 */}
-                <div className={`${styles.promoBook} ${styles.bookUpsc}`}>
-                  <div className={styles.bookBadge}>UPSC</div>
-                  <div className={styles.bookTitle}>INDIAN POLITY</div>
-                  <div className={styles.bookAuthor}>Laxmikanth</div>
-                </div>
-                {/* Book 2 */}
-                <div className={`${styles.promoBook} ${styles.bookMppsc}`}>
-                  <div className={styles.bookBadge}>MPPSC</div>
-                  <div className={styles.bookTitle}>GEOGRAPHY</div>
-                  <div className={styles.bookAuthor}>Vidhya Notes</div>
-                </div>
-                {/* Book 3 */}
-                <div className={`${styles.promoBook} ${styles.bookCbse}`}>
-                  <div className={styles.bookBadge}>CBSE</div>
-                  <div className={styles.bookTitle}>QUESTION BANK</div>
-                  <div className={styles.bookAuthor}>Oswaal Books</div>
-                </div>
-              </div>
-              
-              {/* Sparkles / Floating elements */}
-              <div className={styles.visualSparkle1}>✨</div>
-              <div className={styles.visualSparkle2}>⚡</div>
-              <div className={styles.visualSparkle3}>✨</div>
-            </div>
           </div>
         </div>
       </section>
