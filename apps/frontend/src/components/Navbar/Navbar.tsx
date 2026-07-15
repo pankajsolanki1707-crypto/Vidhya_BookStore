@@ -252,7 +252,8 @@ export default function Navbar() {
       {/* Main Navbar */}
       <div className={`${styles.navbar} ${scrolled ? styles.navbarScrolled : ''}`}>
         <div className="container">
-          <div className={styles.navContainer}>
+          {/* Row 1: Logo, Search, and Actions */}
+          <div className={styles.navbarFirstRow}>
             {/* Logo */}
             <Link href="/" className={styles.logo}>
               <BookOpen size={24} className={styles.logoIcon} />
@@ -262,54 +263,9 @@ export default function Navbar() {
               </div>
             </Link>
 
-            {/* Desktop Navigation Links (Centered) */}
-            <nav className={styles.navMenu}>
-              <Link href="/" className={styles.navLink}>Home</Link>
-              <Link href="/books?category=Competitive%20Exams" className={styles.navLink}>Competitive Exams</Link>
-              <Link href="/books?category=Academic%20Textbooks" className={styles.navLink}>Textbooks</Link>
-              <Link href="/books?category=Stationery" className={styles.navLink}>Stationery</Link>
-              <Link href="/books?category=Used%20Books" className={styles.navLink}>Used Books</Link>
-              <Link href="/contact" className={styles.navLink}>Support</Link>
-            </nav>
-
-            {/* Actions (Right) */}
-            <div className={styles.navActions}>
-              {/* Search Toggle Icon */}
-              <button 
-                type="button" 
-                onClick={() => setIsSearchExpanded(!isSearchExpanded)} 
-                className={styles.searchToggleBtn}
-                title="Search Products"
-              >
-                <Search size={20} />
-              </button>
-
-              {/* Cart Link */}
-              <Link href="/cart" className={styles.cartIconContainer}>
-                <ShoppingBag size={20} className={styles.cartIcon} />
-                {cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
-              </Link>
-
-              {/* Admin shortcut */}
-              <Link href="/admin" className={styles.adminIconBtn} title="Staff Login">
-                <BookOpen size={20} />
-              </Link>
-
-              {/* Mobile Menu Button */}
-              <button
-                className={styles.mobileMenuBtn}
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                aria-label="Toggle menu"
-              >
-                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
-            </div>
-          </div>
-
-          {/* Slide-down Search Console */}
-          {isSearchExpanded && (
-            <div className={styles.searchBarSlideDown} ref={searchRef}>
-              <form onSubmit={handleSearchSubmit} className={styles.searchForm} style={{ display: 'flex', alignItems: 'center', width: '100%', position: 'relative' }}>
+            {/* Centered Search Bar */}
+            <div className={styles.headerSearchContainer} ref={searchRef}>
+              <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
                 <input
                   type="text"
                   placeholder="Search competitive exams, author, stationery, UPSC..."
@@ -321,27 +277,13 @@ export default function Navbar() {
                   onFocus={() => setShowSuggestions(true)}
                   onKeyDown={handleKeyDown}
                   className={styles.searchInput}
-                  style={{ flex: 1, paddingRight: '75px' }}
                 />
                 
                 {/* Voice Search Button */}
                 <button
                   type="button"
                   onClick={startVoiceSearch}
-                  style={{
-                    position: 'absolute',
-                    right: '48px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'none',
-                    border: 'none',
-                    color: isListening ? 'var(--color-error)' : 'var(--color-text-muted)',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '8px'
-                  }}
+                  className={styles.voiceSearchBtn}
                   title="Voice Search"
                 >
                   {isListening ? <MicOff size={16} style={{ color: 'var(--color-error)' }} /> : <Mic size={16} />}
@@ -414,9 +356,9 @@ export default function Navbar() {
                               key={idx}
                               type="button"
                               onClick={() => {
-                                setSearchQuery(t.query);
-                                router.push(`/books?query=${encodeURIComponent(t.query)}`);
-                                setShowSuggestions(false);
+                                  setSearchQuery(t.query);
+                                  router.push(`/books?query=${encodeURIComponent(t.query)}`);
+                                  setShowSuggestions(false);
                               }}
                               style={{
                                 fontSize: '0.78rem',
@@ -425,7 +367,7 @@ export default function Navbar() {
                                 borderRadius: 'var(--radius-full)',
                                 backgroundColor: 'var(--color-bg-light)',
                                 cursor: 'pointer',
-                                  color: 'var(--color-text-main)'
+                                color: 'var(--color-text-main)'
                               }}
                             >
                               {t.label}
@@ -513,7 +455,41 @@ export default function Navbar() {
                 </div>
               )}
             </div>
-          )}
+
+            {/* Actions */}
+            <div className={styles.navActions}>
+              <Link href="/admin" className={styles.adminIconBtn} title="Staff Login">
+                <BookOpen size={20} />
+              </Link>
+
+              <Link href="/cart" className={styles.cartIconContainer}>
+                <ShoppingBag size={20} className={styles.cartIcon} />
+                {cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
+              </Link>
+
+              {/* Mobile Menu Button */}
+              <button
+                className={styles.mobileMenuBtn}
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label="Toggle menu"
+              >
+                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Row 2: Secondary Desktop Menu Links */}
+          <div className={styles.navbarSecondRow}>
+            <nav className={styles.navMenu}>
+              <Link href="/" className={styles.navLink}>Home</Link>
+              <Link href="/books?category=Competitive%20Exams" className={styles.navLink}>Competitive Exams</Link>
+              <Link href="/books?category=Academic%20Textbooks" className={styles.navLink}>Academic Textbooks</Link>
+              <Link href="/books?category=Stationery" className={styles.navLink}>Stationery Store</Link>
+              <Link href="/books?category=Used%20Books" className={styles.navLink}>Used Books</Link>
+              <Link href="/contact" className={styles.navLink}>Support</Link>
+              <Link href="/admin" className={styles.navLink}>Admin Portal</Link>
+            </nav>
+          </div>
         </div>
       </div>
 

@@ -64,26 +64,38 @@
 
 /* Navbar main styles */
 .navbar {
-  background-color: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(33, 61, 143, 0.08);
-  padding: 14px 0;
+  background-color: var(--color-bg-white);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0;
   transition: var(--transition-smooth);
 }
 
 .navbarScrolled {
-  background-color: rgba(255, 255, 255, 0.95);
-  padding: 8px 0;
-  box-shadow: 0 10px 30px -10px rgba(33, 61, 143, 0.12);
-  border-bottom: 1px solid rgba(33, 61, 143, 0.05);
+  background-color: var(--color-bg-white);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.navContainer {
+.navbarFirstRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 14px 0;
   gap: 20px;
+}
+
+.navbarSecondRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.headerSearchContainer {
+  position: relative;
+  flex: 1;
+  max-width: 580px;
+  margin: 0 40px;
 }
 
 /* Logo */
@@ -125,26 +137,21 @@
 }
 
 /* Search Bar styling */
-.searchContainer {
-  position: relative;
-  flex: 1;
-  max-width: 500px;
-}
-
 .searchForm {
   display: flex;
   align-items: center;
   background-color: var(--color-bg-light);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-full);
-  padding: 2px 6px 2px 18px;
+  padding: 2px 80px 2px 18px;
+  position: relative;
   transition: var(--transition-smooth);
 }
 
 .searchForm:focus-within {
   border-color: var(--color-primary);
   background-color: var(--color-bg-white);
-  box-shadow: 0 0 0 4px rgba(33, 61, 143, 0.1);
+  box-shadow: 0 0 0 3px rgba(22, 45, 89, 0.08);
 }
 
 .searchInput {
@@ -154,27 +161,54 @@
   padding: 8px 0;
   font-size: 0.9rem;
   color: var(--color-text-main);
+  outline: none;
 }
 
 .searchInput::placeholder {
-  color: var(--color-text-light);
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+.voiceSearchBtn {
+  position: absolute;
+  right: 44px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  transition: var(--transition-smooth);
+}
+
+.voiceSearchBtn:hover {
+  color: var(--color-primary);
 }
 
 .searchBtn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
   background-color: var(--color-primary);
-  color: var(--color-secondary);
+  color: #ffffff;
+  border: none;
   border-radius: var(--radius-full);
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   transition: var(--transition-smooth);
 }
 
 .searchBtn:hover {
-  background-color: var(--color-primary-hover);
-  transform: scale(1.05);
+  background-color: var(--color-accent-yellow);
+  color: #121212;
 }
 
 /* Suggestions Dropdown */
@@ -523,6 +557,10 @@
   .navMenu {
     display: none;
   }
+
+  .navbarSecondRow {
+    display: none;
+  }
   
   .mobileMenuBtn {
     display: flex;
@@ -544,8 +582,8 @@
     display: none;
   }
   
-  .searchContainer {
-    display: none; /* In mobile, search is in the drawer */
+  .headerSearchContainer {
+    display: none;
   }
 
   .brandMain {
