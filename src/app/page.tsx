@@ -257,84 +257,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 11. Popular Authors Matrix */}
-      <section className={styles.sectionPadding}>
-        <div className="container">
-          <div className={styles.sectionTitleContainer}>
-            <div>
-              <h2 className={styles.sectionTitle}>Popular Authors</h2>
-              <p className={styles.sectionSubtitle}>Explore core guides by leading experts & educators</p>
-            </div>
-          </div>
 
-          <div className={styles.authorsGrid}>
-            {popularAuthors.map((author, index) => (
-              <div key={index} className={styles.authorCard}>
-                <div className={styles.authorAvatar}>
-                  {author.initial}
-                </div>
-                <h4 className={styles.authorName}>{author.name}</h4>
-                <p className={styles.sectionSubtitle} style={{ marginTop: 0, fontSize: '0.75rem' }}>{author.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* 12. Publishers Grid */}
-      <section className={styles.sectionPadding} style={{ backgroundColor: 'var(--color-bg-light)' }}>
-        <div className="container">
-          <div className={styles.sectionTitleContainer}>
-            <div>
-              <h2 className={styles.sectionTitle}>Official Publishers</h2>
-              <p className={styles.sectionSubtitle}>100% genuine prints sourced directly from authorized publications</p>
-            </div>
-          </div>
 
-          <div className={styles.publishersGrid}>
-            {publishers.map((pub, index) => (
-              <div key={index} className={styles.publisherCard}>
-                {pub}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 13. Why Choose Us Section */}
-      <section className={styles.sectionPadding}>
-        <div className="container">
-          <div className={styles.sectionTitleContainer}>
-            <div>
-              <h2 className={styles.sectionTitle}>Why Choose Vidhya Book Store?</h2>
-              <p className={styles.sectionSubtitle}>Sought-after benefits loved by Indore students & coaching centers</p>
-            </div>
-          </div>
-
-          <div className={styles.whyGrid}>
-            <div className={styles.whyCard}>
-              <CheckCircle size={28} className={styles.whyIcon} />
-              <h3 className={styles.whyTitle}>100% Genuine Copies</h3>
-              <p className={styles.whyText}>Direct publications supply. No low-quality pirated prints. Sourced officially.</p>
-            </div>
-            <div className={styles.whyCard}>
-              <BadgePercent size={28} className={styles.whyIcon} />
-              <h3 className={styles.whyTitle}>Student Discounts</h3>
-              <p className={styles.whyText}>Consistent student discounts on competitive, novels, and stationery registers.</p>
-            </div>
-            <div className={styles.whyCard}>
-              <Send size={28} className={styles.whyIcon} />
-              <h3 className={styles.whyTitle}>Same-Day Indore Shipping</h3>
-              <p className={styles.whyText}>Delivering to Bhanwarkuan, Geeta Bhawan, Navlakha, and hostel doors in hours.</p>
-            </div>
-            <div className={styles.whyCard}>
-              <CheckCircle size={28} className={styles.whyIcon} />
-              <h3 className={styles.whyTitle}>Used Books Buy/Sell</h3>
-              <p className={styles.whyText}>Sustainable trades. Bring old semester guides and swap them for study points.</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* 14. Store Gallery (Actual Store Photos) */}
       <section className={`section-padding ${styles.aboutSection}`}>

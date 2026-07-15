@@ -250,75 +250,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/* 12. Why Choose Us */}
-      <section className={styles.sectionPadding}>
-        <div className="container">
-          <div className={styles.sectionTitleContainer}>
-            <div>
-              <h2 className={styles.sectionTitle}>Why Choose Vidhya Book Store?</h2>
-              <p className={styles.sectionSubtitle}>Benefits loved by Indore students &amp; coaching centers for 20+ years</p>
-            </div>
-          </div>
-          <div className={styles.whyGrid}>
-            {[
-              { icon: <ShieldCheck size={24} />, title: '100% Genuine Copies',    text: 'Direct publications supply. Zero pirated prints. Sourced officially.' },
-              { icon: <BadgePercent size={24} />, title: 'Student Discounts',      text: 'Consistent discount offsets for competitive and novels prep.' },
-              { icon: <Truck size={24} />,        title: 'Same-Day Indore Delivery', text: 'Delivering directly to Bhanwarkuan, Geeta Bhawan hostel desks.' },
-              { icon: <RotateCcw size={24} />,   title: 'Used Books Buy/Sell',     text: 'Sustainable trades. Exchange older semesters for store points.' },
-              { icon: <FileText size={24} />,    title: 'GST Invoice Provided',    text: 'Proper business tax invoices provided with every book order.' },
-              { icon: <MapPin size={24} />,      title: 'Store Pickup Available',  text: 'Select local pickup at Payal Plaza counter to save time.' },
-              { icon: <BookOpen size={24} />,    title: '20+ Years Experience',    text: 'Serving aspirants in central India education hubs since 2005.' },
-              { icon: <Library size={24} />,     title: '50,000+ Books Catalog',   text: 'Enormous on-shelf inventory ranging from UPSC to DAVV sets.' }
-            ].map((w, i) => (
-              <div key={i} className={styles.whyCard}>
-                <div className={styles.whyIconWrap}>
-                  <span className={styles.whyIcon}>{w.icon}</span>
-                </div>
-                <h3 className={styles.whyTitle}>{w.title}</h3>
-                <p className={styles.whyText}>{w.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* 13. Popular Authors */}
-      <section className={styles.sectionPadding} style={{ backgroundColor: 'var(--color-bg-light)' }}>
-        <div className="container">
-          <div className={styles.sectionTitleContainer}>
-            <div>
-              <h2 className={styles.sectionTitle}>Popular Authors</h2>
-              <p className={styles.sectionSubtitle}>Explore core guides by leading experts &amp; educators</p>
-            </div>
-          </div>
-          <div className={styles.authorsGrid}>
-            {popularAuthors.map((author, i) => (
-              <div key={i} className={styles.authorCard}>
-                <div className={styles.authorAvatar}>{author.initial}</div>
-                <h4 className={styles.authorName}>{author.name}</h4>
-                <p className={styles.sectionSubtitle} style={{ marginTop: 0, fontSize: '0.75rem' }}>{author.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 14. Official Publishers */}
-      <section className={styles.sectionPadding}>
-        <div className="container">
-          <div className={styles.sectionTitleContainer}>
-            <div>
-              <h2 className={styles.sectionTitle}>Official Publishers</h2>
-              <p className={styles.sectionSubtitle}>100% genuine prints sourced directly from authorized publications</p>
-            </div>
-          </div>
-          <div className={styles.publishersGrid}>
-            {publishers.map((pub, i) => (
-              <div key={i} className={styles.publisherCard}>{pub}</div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* 15. Store Showcase */}
       <section className={`section-padding ${styles.aboutSection}`}>
